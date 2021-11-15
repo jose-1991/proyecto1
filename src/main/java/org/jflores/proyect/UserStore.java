@@ -15,12 +15,15 @@ public class UserStore {
 
             bufferLectura = new BufferedReader(new FileReader("C:\\Users\\JoSe\\Desktop\\Proyecto1\\datosbd.csv"));
             String linea = bufferLectura.readLine();
+            int total = 0;
 
             while (linea != null) {
 //                String[] campos = linea.split(SEPARADOR);
-                System.out.println(linea);
+//                System.out.println(linea);
+                total += 1;
                 linea = bufferLectura.readLine();
             }
+            System.out.println(total);
         }
         catch (IOException e) {
             e.printStackTrace();
