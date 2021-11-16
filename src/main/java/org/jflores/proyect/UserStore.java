@@ -29,16 +29,15 @@ public class UserStore {
             bufferLectura = new BufferedReader(new FileReader(file));
 
                    String line = bufferLectura.readLine();
-            int total = 0;
+
 
             while (line != null) {
-                total += 1;
+
                 String[] campos = line.split(SEPARADOR);
                 linea.add(Arrays.toString(campos)+"\n");
                 line = bufferLectura.readLine();
 
             }
-            System.out.println(total);
         }
         catch (IOException e) {
             System.out.println("Archivo no encontrado!");;
