@@ -3,30 +3,47 @@ package org.jflores.proyect;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class UserStore {
-    public static final String SEPARADOR = ",";
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args){
+        System.out.println(leerArchivoCSV("C:\\Users\\JoSe\\Desktop\\Proyecto1\\datosbd.csv"));
+
+
+    }
+
+    public static List<String> leerArchivoCSV(String file){
+
+        final String SEPARADOR = ",";
         BufferedReader bufferLectura = null;
+        List<String> linea = new ArrayList<>();
         try {
+            if (!file.endsWith(".csv")){
+                throw new Exception();
+            }
 
-            bufferLectura = new BufferedReader(new FileReader("C:\\Users\\JoSe\\Desktop\\Proyecto1\\datosbd.csv"));
-            String linea = bufferLectura.readLine();
+            bufferLectura = new BufferedReader(new FileReader(file));
+
+                   String line = bufferLectura.readLine();
             int total = 0;
 
-            while (linea != null) {
-//                String[] campos = linea.split(SEPARADOR);
-//                System.out.println(linea);
+            while (line != null) {
                 total += 1;
-                linea = bufferLectura.readLine();
+                String[] campos = line.split(SEPARADOR);
+                linea.add(Arrays.toString(campos)+"\n");
+                line = bufferLectura.readLine();
+
             }
             System.out.println(total);
         }
         catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Archivo no encontrado!");;
+        }catch (Exception ex){
+            System.out.println("selecione un archivo con extension .csv");
         }
         finally {
             if (bufferLectura != null) {
@@ -38,5 +55,6 @@ public class UserStore {
                 }
             }
         }
+        return linea;
     }
 }
