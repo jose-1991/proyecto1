@@ -13,14 +13,21 @@ public class UserStore {
         BufferedReader bufferLectura = null;
         try {
 
-            bufferLectura = new BufferedReader(new FileReader("C:\\Users\\JoSe\\Desktop\\Proyecto1\\datosbd.csv"));
-            String linea = bufferLectura.readLine();
-
-            while (linea != null) {
-//                String[] campos = linea.split(SEPARADOR);
-                System.out.println(linea);
-                linea = bufferLectura.readLine();
+            if (!file.endsWith(".csv")){
+                throw new Exception();
             }
+
+            bufferLectura = new BufferedReader(new FileReader(file));
+
+                   String line = bufferLectura.readLine();
+
+
+            while (line != null) {
+
+                String[] campos = line.split(SEPARADOR);
+                linea.add(Arrays.toString(campos)+"\n");
+                line = bufferLectura.readLine();
+
         }
         catch (IOException e) {
             e.printStackTrace();
