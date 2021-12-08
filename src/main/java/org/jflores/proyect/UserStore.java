@@ -8,9 +8,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+
 
 
 public class UserStore {
@@ -18,11 +19,21 @@ public class UserStore {
     static List<Customer> customerList = new ArrayList<>();
     static List<Product> productList = new ArrayList<>();
     static List<Order> orderList = new ArrayList<>();
+    static LocalDateTime inicio;
+    static LocalDateTime fin;
+    private static int cID;
+    private static int pID;
 
     public static void main(String[] args) {
+        inicio = LocalDateTime.now();
+        System.out.println(inicio);
 
         leerArchivoCSV("C:\\Users\\JoSe\\Desktop\\Proyecto1\\datosbd.csv");
         new DataBase().csvToMysql();
+        fin = LocalDateTime.now();
+        System.out.println(fin);
+
+
     }
 
     public static void leerArchivoCSV(String file) {
@@ -32,7 +43,7 @@ public class UserStore {
         BufferedReader bufferLectura = null;
         try {
             if (!file.endsWith(".csv")) {
-                throw new FileNotFoundException();
+                throw new Exception();
             }
             bufferLectura = new BufferedReader(new FileReader(file));
             bufferLectura.readLine();
@@ -45,12 +56,12 @@ public class UserStore {
                 line = bufferLectura.readLine();
 
             }
-            listasFinales();
+            asignarID();
 
         } catch (FileNotFoundException ex) {
-            System.out.println("seleccione un archivo con extension .csv");
-        } catch (IOException e) {
             System.out.println("Archivo no encontrado!");
+        } catch (Exception e) {
+            System.out.println("seleccione un archivo con extension .csv");
         } finally {
             if (bufferLectura != null) {
                 try {
@@ -84,47 +95,22 @@ public class UserStore {
         order.setCustomer(customer);
         order.setProduct(product);
 
-        customerList.add(customer);
-        productList.add(product);
+
+        if (!customerList.contains(customer)) {
+            customer.setcustomer_ID(++cID);
+            customerList.add(customer);
+        }
+        if (!productList.contains(product)) {
+            product.setProduct_ID(++pID);
+            productList.add(product);
+        }
         orderList.add(order);
     }
 
-    public static void quitarDuplicadoCustomer() {
-        List<Customer> finalCustomer = new ArrayList<>();
-        AtomicInteger id = new AtomicInteger();
-        customerList.
-                forEach(
-                        c -> {
-                            if (!finalCustomer.contains(c)) {
-                                c.setcustomer_ID(id.incrementAndGet());
-                                finalCustomer.add(c);
-                            }
-                        }
-                );
-        customerList = finalCustomer;
-    }
 
-    public static void quitarDuplicadoProducto() {
-        List<Product> finalProduct = new ArrayList<>();
-        AtomicInteger id = new AtomicInteger();
-        productList.
-                forEach(
-                        p -> {
-                            if (!finalProduct.contains(p)) {
-                                p.setProduct_ID(id.incrementAndGet());
-                                finalProduct.add(p);
-                            }
-                        }
-                );
-        productList = finalProduct;
-    }
-
-    public static void listasFinales() {
-        quitarDuplicadoCustomer();
-        quitarDuplicadoProducto();
+    public static void asignarID() {
 
         for (Order o : orderList) {
-
             for (Customer c1 : customerList) {
                 if (o.getCustomer().equals(c1)) {
                     o.setCustomer_ID(c1.getcustomer_ID());
