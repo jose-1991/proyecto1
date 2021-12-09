@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class UserStore {
 
     static List<Customer> customerList = new ArrayList<>();
@@ -56,7 +55,6 @@ public class UserStore {
                 line = bufferLectura.readLine();
 
             }
-            asignarID();
 
         } catch (FileNotFoundException ex) {
             System.out.println("Archivo no encontrado!");
@@ -92,8 +90,6 @@ public class UserStore {
         order.setQuantity(Integer.parseInt(field[17]));
         order.setProfit(Double.parseDouble(field[20].replace(',', '.')));
         order.setTotal(Double.parseDouble(field[19].replace(',', '.')));
-        order.setCustomer(customer);
-        order.setProduct(product);
 
 
         if (!customerList.contains(customer)) {
@@ -104,29 +100,22 @@ public class UserStore {
             product.setProduct_ID(++pID);
             productList.add(product);
         }
+        order.setCustomer(customer);
+        order.setProduct(product);
+
+        for (Customer c : customerList) {
+            if (c.equals(customer)) {
+                order.setCustomer_ID(c.getcustomer_ID());
+            }
+        }
+        for (Product p : productList) {
+            if (p.equals(product)) {
+                order.setProduct_ID(p.getProduct_ID());
+            }
+        }
         orderList.add(order);
     }
 
-
-    public static void asignarID() {
-
-        for (Order o : orderList) {
-            for (Customer c1 : customerList) {
-                if (o.getCustomer().equals(c1)) {
-                    o.setCustomer_ID(c1.getcustomer_ID());
-                    break;
-                }
-            }
-            for (Product p1 : productList) {
-                if (o.getProduct().equals(p1)) {
-                    o.setProduct_ID(p1.getProduct_ID());
-                    break;
-                }
-            }
-        }
-
-
-    }
 
 }
 
