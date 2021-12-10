@@ -3,39 +3,48 @@ package org.jflores.proyect.modelos;
 import java.util.Objects;
 
 public class Order {
-    private int id;
-    private int customer_ID;
-    private int product_ID;
+    private String order_ID;
+    private String customer_ID;
+    private int address_ID;
+    private String product_ID;
     private String orderDate;
+    private Double sales;
     private int quantity;
+    private Double discount;
     private Double total;
     private Double profit;
 
-    private Customer customer;
-    private Product product;
 
 
-    public int getId() {
-        return id;
+    public String getOrder_ID() {
+        return order_ID;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setOrder_ID(String order_ID) {
+        this.order_ID = order_ID;
     }
 
-    public int getCustomer_ID() {
+    public String getCustomer_ID() {
         return customer_ID;
     }
 
-    public void setCustomer_ID(int customer_ID) {
+    public void setCustomer_ID(String customer_ID) {
         this.customer_ID = customer_ID;
     }
 
-    public int getProduct_ID() {
+    public int getAddress_ID() {
+        return address_ID;
+    }
+
+    public void setAddress_ID(int address_ID) {
+        this.address_ID = address_ID;
+    }
+
+    public String getProduct_ID() {
         return product_ID;
     }
 
-    public void setProduct_ID(int product_ID) {
+    public void setProduct_ID(String product_ID) {
         this.product_ID = product_ID;
     }
 
@@ -46,6 +55,13 @@ public class Order {
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
+    public Double getSales() {
+        return sales;
+    }
+
+    public void setSales(Double sales) {
+        this.sales = sales;
+    }
 
     public int getQuantity() {
         return quantity;
@@ -53,6 +69,14 @@ public class Order {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
     }
 
     public Double getTotal() {
@@ -71,43 +95,18 @@ public class Order {
         this.profit = profit;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return Objects.equals(customer, order.getCustomer()) && Objects.equals(product, order.getProduct());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(customer, product);
-    }
 
     @Override
     public String toString() {
-        return  id + ") " +
+        return  order_ID + " ] " +
+                orderDate  + " | " +
                 customer_ID  + " | " +
+                address_ID + " | " +
                 product_ID + " | " +
-                orderDate + " | " +
+                sales + " | " +
                 quantity + " | " +
+                discount + " | " +
                 total + " | "+
-                profit;
+                profit + "\n";
     }
 }

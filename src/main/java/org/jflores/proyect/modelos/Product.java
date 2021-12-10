@@ -4,19 +4,19 @@ import java.util.Objects;
 
 public class Product {
 
-    private int product_ID;
+    private String product_ID;
     private String category;
     private String sub_category;
     private String pName;
-    private Double sales;
 
 
 
-    public int getProduct_ID() {
+
+    public String getProduct_ID() {
         return product_ID;
     }
 
-    public void setProduct_ID(int product_ID) {
+    public void setProduct_ID(String product_ID) {
         this.product_ID = product_ID;
     }
 
@@ -44,25 +44,19 @@ public class Product {
         this.pName = pName;
     }
 
-    public Double getSales() {
-        return sales;
-    }
 
-    public void setSales(Double sales) {
-        this.sales = sales;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(category, product.category) && Objects.equals(sub_category, product.sub_category) && Objects.equals(pName, product.pName) && Objects.equals(sales, product.sales);
+        return Objects.equals(product_ID, product.product_ID) && Objects.equals(category, product.category) && Objects.equals(sub_category, product.sub_category) && Objects.equals(pName, product.pName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(category, sub_category, pName, sales);
+        return Objects.hash(product_ID, category, sub_category, pName);
     }
 
     @Override
@@ -70,7 +64,6 @@ public class Product {
         return product_ID + " | " +
                 category + " | " +
                 sub_category + " | " +
-                pName + " | " +
-                sales;
+                pName + "\n";
     }
 }

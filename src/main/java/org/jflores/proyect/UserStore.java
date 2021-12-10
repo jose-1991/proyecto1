@@ -1,5 +1,6 @@
 package org.jflores.proyect;
 
+import org.jflores.proyect.modelos.Address;
 import org.jflores.proyect.modelos.Customer;
 import org.jflores.proyect.modelos.Order;
 import org.jflores.proyect.modelos.Product;
@@ -18,10 +19,11 @@ public class UserStore {
     static List<Customer> customerList = new ArrayList<>();
     static List<Product> productList = new ArrayList<>();
     static List<Order> orderList = new ArrayList<>();
+    static List<Address> addressList = new ArrayList<>();
+    private static int aID;
     static LocalDateTime inicio;
     static LocalDateTime fin;
-    private static int cID;
-    private static int pID;
+
 
     public static void main(String[] args) {
         inicio = LocalDateTime.now();
@@ -29,6 +31,7 @@ public class UserStore {
 
         leerArchivoCSV("C:\\Users\\JoSe\\Desktop\\Proyecto1\\datosbd.csv");
         new DataBase().csvToMysql();
+//        System.out.println(productList);
         fin = LocalDateTime.now();
         System.out.println(fin);
 
@@ -73,46 +76,48 @@ public class UserStore {
 
     public static void rellenarListas(String[] field) {
         Customer customer = new Customer();
+        Address address = new Address();
         Product product = new Product();
         Order order = new Order();
 
+        order.setOrder_ID(field[1]);
+        order.setOrderDate(field[2]);
+        order.setCustomer_ID(field[4]);
+
+        order.setProduct_ID(field[12]);
+        order.setSales(Double.parseDouble(field[16].replace(',', '.')));
+        order.setQuantity(Integer.parseInt(field[17]));
+        order.setDiscount(Double.parseDouble(field[18].replace(',', '.')));
+        order.setTotal(Double.parseDouble(field[19].replace(',', '.')));
+        order.setProfit(Double.parseDouble(field[20].replace(',', '.')));
+        customer.setcustomer_ID(field[4]);
         customer.setcName(field[5]);
-        customer.setCountry(field[7]);
-        customer.setCity(field[8]);
-        customer.setState(field[9]);
-        customer.setPostalCode(Integer.parseInt(field[10]));
-        product.setpName(field[15]);
+
+        address.setCountry(field[7]);
+        address.setCity(field[8]);
+        address.setState(field[9]);
+        address.setPostalCode(Integer.parseInt(field[10]));
+        product.setProduct_ID(field[12]);
         product.setCategory(field[13]);
         product.setSub_category(field[14]);
-        product.setSales(Double.parseDouble(field[16].replace(',', '.')));
-        order.setId(Integer.parseInt(field[0]));
-        order.setOrderDate(field[2]);
-        order.setQuantity(Integer.parseInt(field[17]));
-        order.setProfit(Double.parseDouble(field[20].replace(',', '.')));
-        order.setTotal(Double.parseDouble(field[19].replace(',', '.')));
+        product.setpName(field[15]);
 
-
-        if (!customerList.contains(customer)) {
-            customer.setcustomer_ID(++cID);
+        if (!customerList.contains(customer)){
             customerList.add(customer);
         }
-        if (!productList.contains(product)) {
-            product.setProduct_ID(++pID);
+        if (!addressList.contains(address)) {
+            address.setAddress_ID(++aID);
+            addressList.add(address);
+        }
+        if (!productList.contains(product)){
             productList.add(product);
         }
-        order.setCustomer(customer);
-        order.setProduct(product);
+        for (Address a: addressList){
+            if (a.equals(address)){
+                order.setAddress_ID(a.getAddress_ID());
+            }
+        }
 
-        for (Customer c : customerList) {
-            if (c.equals(customer)) {
-                order.setCustomer_ID(c.getcustomer_ID());
-            }
-        }
-        for (Product p : productList) {
-            if (p.equals(product)) {
-                order.setProduct_ID(p.getProduct_ID());
-            }
-        }
         orderList.add(order);
     }
 
