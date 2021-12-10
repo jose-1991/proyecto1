@@ -42,7 +42,7 @@ public class Customer {
     @Override
     public String toString() {
         return  customer_ID + " | " +
-                cName;
+                cName + "\n";
 
     }
 }

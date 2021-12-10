@@ -11,13 +11,20 @@ public class DataBase {
         String sql = "INSERT INTO store.customer(customer_ID, cName)" +
                 "VALUES(?,?)";
         try {
+
+            Statement st = getConnection().createStatement();
+            st.executeUpdate("DELETE FROM store.order");
+            st.executeUpdate("DELETE FROM store.address");
+            st.executeUpdate("DELETE FROM store.product");
+            st.executeUpdate("DELETE FROM store.customer");
+            st.close();
+
             PreparedStatement cStmt = getConnection().prepareStatement(sql);
             getConnection().setAutoCommit(false);
             UserStore.customerList.forEach(c -> {
                 try {
                     cStmt.setString(1, c.getcustomer_ID());
                     cStmt.setString(2, c.getcName());
-
                     cStmt.addBatch();
                 } catch (SQLException exception) {
                     exception.printStackTrace();
@@ -64,7 +71,7 @@ public class DataBase {
             getConnection().commit();
             pStmt.close();
 
-            sql = "INSERT INTO store.order(order_ID, orderDate, customer_ID, address_ID, product_ID, sales, quantity, discount, total, profit)" +
+            sql = "INSERT INTO store.order(order_ID, orderDate, customer_ID, address_ID, product_ID, price, quantity, discount, total, profit)" +
                     "VALUES(?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement oStmt = getConnection().prepareStatement(sql);
             UserStore.orderList.forEach(o -> {
@@ -74,7 +81,7 @@ public class DataBase {
                     oStmt.setString(3, o.getCustomer_ID());
                     oStmt.setInt(4, o.getAddress_ID());
                     oStmt.setString(5, o.getProduct_ID());
-                    oStmt.setDouble(6, o.getSales());
+                    oStmt.setDouble(6, o.getPrice());
                     oStmt.setInt(7, o.getQuantity());
                     oStmt.setDouble(8, o.getDiscount());
                     oStmt.setDouble(9, o.getTotal());

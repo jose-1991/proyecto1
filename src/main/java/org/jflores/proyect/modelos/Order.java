@@ -8,7 +8,7 @@ public class Order {
     private int address_ID;
     private String product_ID;
     private String orderDate;
-    private Double sales;
+    private Double price;
     private int quantity;
     private Double discount;
     private Double total;
@@ -55,12 +55,12 @@ public class Order {
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
-    public Double getSales() {
-        return sales;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setSales(Double sales) {
-        this.sales = sales;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public int getQuantity() {
@@ -103,7 +103,7 @@ public class Order {
                 customer_ID  + " | " +
                 address_ID + " | " +
                 product_ID + " | " +
-                sales + " | " +
+                price + " | " +
                 quantity + " | " +
                 discount + " | " +
                 total + " | "+

@@ -29,9 +29,8 @@ public class UserStore {
         inicio = LocalDateTime.now();
         System.out.println(inicio);
 
-        leerArchivoCSV("C:\\Users\\JoSe\\Desktop\\Proyecto1\\datosbd.csv");
+        leerArchivoCSV("C:\\Users\\JoSe\\Desktop\\Proyecto1\\StoreData.csv");
         new DataBase().csvToMysql();
-//        System.out.println(productList);
         fin = LocalDateTime.now();
         System.out.println(fin);
 
@@ -80,27 +79,27 @@ public class UserStore {
         Product product = new Product();
         Order order = new Order();
 
-        order.setOrder_ID(field[1]);
-        order.setOrderDate(field[2]);
-        order.setCustomer_ID(field[4]);
+        order.setOrder_ID(field[0]);
+        order.setOrderDate(field[1]);
+        order.setCustomer_ID(field[3]);
 
-        order.setProduct_ID(field[12]);
-        order.setSales(Double.parseDouble(field[16].replace(',', '.')));
-        order.setQuantity(Integer.parseInt(field[17]));
-        order.setDiscount(Double.parseDouble(field[18].replace(',', '.')));
-        order.setTotal(Double.parseDouble(field[19].replace(',', '.')));
-        order.setProfit(Double.parseDouble(field[20].replace(',', '.')));
-        customer.setcustomer_ID(field[4]);
-        customer.setcName(field[5]);
+        order.setProduct_ID(field[11]);
+        order.setPrice(Double.parseDouble(field[15].replace(',', '.')));
+        order.setQuantity(Integer.parseInt(field[16]));
+        order.setDiscount(Double.parseDouble(field[17].replace(',', '.')));
+        order.setTotal(Double.parseDouble(field[18].replace(',', '.')));
+        order.setProfit(Double.parseDouble(field[19].replace(',', '.')));
+        customer.setcustomer_ID(field[3]);
+        customer.setcName(field[4]);
 
-        address.setCountry(field[7]);
-        address.setCity(field[8]);
-        address.setState(field[9]);
-        address.setPostalCode(Integer.parseInt(field[10]));
-        product.setProduct_ID(field[12]);
-        product.setCategory(field[13]);
-        product.setSub_category(field[14]);
-        product.setpName(field[15]);
+        address.setCountry(field[6]);
+        address.setCity(field[7]);
+        address.setState(field[8]);
+        address.setPostalCode(Integer.parseInt(field[9]));
+        product.setProduct_ID(field[11]);
+        product.setCategory(field[12]);
+        product.setSub_category(field[13]);
+        product.setpName(field[14]);
 
         if (!customerList.contains(customer)){
             customerList.add(customer);
@@ -117,7 +116,6 @@ public class UserStore {
                 order.setAddress_ID(a.getAddress_ID());
             }
         }
-
         orderList.add(order);
     }
 
