@@ -1,5 +1,10 @@
 package org.jflores.proyect;
 
+import org.jflores.proyect.modelos.Address;
+import org.jflores.proyect.modelos.Customer;
+import org.jflores.proyect.modelos.Order;
+import org.jflores.proyect.modelos.Product;
+
 import java.sql.*;
 
 public class DataBase {
@@ -7,7 +12,7 @@ public class DataBase {
         return ConectionDB.getInstance();
     }
 
-    public void csvToMysql() {
+    public void listToMysql() {
         String sql = "INSERT INTO store.customer(customer_ID, cName)" +
                 "VALUES(?,?)";
         try {
@@ -21,15 +26,13 @@ public class DataBase {
 
             PreparedStatement cStmt = getConnection().prepareStatement(sql);
             getConnection().setAutoCommit(false);
-            UserStore.customerList.forEach(c -> {
-                try {
-                    cStmt.setString(1, c.getcustomer_ID());
-                    cStmt.setString(2, c.getcName());
-                    cStmt.addBatch();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
-                }
-            });
+
+            for (Customer c: UserStore.customerList) {
+
+                cStmt.setString(1, c.getcustomer_ID());
+                cStmt.setString(2, c.getcName());
+                cStmt.addBatch();
+            }
             cStmt.executeBatch();
             getConnection().commit();
             cStmt.close();
@@ -37,18 +40,15 @@ public class DataBase {
              sql = "INSERT INTO store.address(address_ID, country, state, city, postalCode) " +
                     "VALUES(?,?,?,?,?)";
             PreparedStatement aStmt = getConnection().prepareStatement(sql);
-            UserStore.addressList.forEach(a -> {
-                try {
+           for (Address a: UserStore.addressList){
+
                     aStmt.setInt(1, a.getAddress_ID());
                     aStmt.setString(2, a.getCountry());
                     aStmt.setString(3, a.getState());
                     aStmt.setString(4, a.getCity());
                     aStmt.setInt(5, a.getPostalCode());
                     aStmt.addBatch();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
                 }
-            });
             aStmt.executeBatch();
             getConnection().commit();
             aStmt.close();
@@ -56,17 +56,14 @@ public class DataBase {
             sql = "INSERT INTO store.product(product_ID, category, sub_category, pName) " +
                     "VALUES(?,?,?,?)";
             PreparedStatement pStmt = getConnection().prepareStatement(sql);
-            UserStore.productList.forEach(p -> {
-                try {
+            for (Product p: UserStore.productList){
+
                     pStmt.setString(1, p.getProduct_ID());
                     pStmt.setString(2, p.getCategory());
                     pStmt.setString(3, p.getSub_category());
                     pStmt.setString(4, p.getpName());
                     pStmt.addBatch();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
                 }
-            });
             pStmt.executeBatch();
             getConnection().commit();
             pStmt.close();
@@ -74,8 +71,8 @@ public class DataBase {
             sql = "INSERT INTO store.order(order_ID, orderDate, customer_ID, address_ID, product_ID, price, quantity, discount, total, profit)" +
                     "VALUES(?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement oStmt = getConnection().prepareStatement(sql);
-            UserStore.orderList.forEach(o -> {
-                try {
+            for (Order o: UserStore.orderList){
+
                     oStmt.setString(1, o.getOrder_ID());
                     oStmt.setString(2, o.getOrderDate());
                     oStmt.setString(3, o.getCustomer_ID());
@@ -87,10 +84,7 @@ public class DataBase {
                     oStmt.setDouble(9, o.getTotal());
                     oStmt.setDouble(10, o.getProfit());
                     oStmt.addBatch();
-                } catch (SQLException exception) {
-                    exception.printStackTrace();
                 }
-            });
             oStmt.executeBatch();
             getConnection().commit();
 

@@ -20,7 +20,6 @@ public class UserStore {
     static List<Product> productList = new ArrayList<>();
     static List<Order> orderList = new ArrayList<>();
     static List<Address> addressList = new ArrayList<>();
-    private static int aID;
     static LocalDateTime inicio;
     static LocalDateTime fin;
 
@@ -28,9 +27,10 @@ public class UserStore {
     public static void main(String[] args) {
         inicio = LocalDateTime.now();
         System.out.println(inicio);
+        DataBase dataBase = new DataBase();
 
         leerArchivoCSV("C:\\Users\\JoSe\\Desktop\\Proyecto1\\StoreData.csv");
-        new DataBase().csvToMysql();
+
         fin = LocalDateTime.now();
         System.out.println(fin);
 
@@ -82,7 +82,7 @@ public class UserStore {
         order.setOrder_ID(field[0]);
         order.setOrderDate(field[1]);
         order.setCustomer_ID(field[3]);
-
+        order.setAddress_ID(Integer.parseInt(field[9]));
         order.setProduct_ID(field[11]);
         order.setPrice(Double.parseDouble(field[15].replace(',', '.')));
         order.setQuantity(Integer.parseInt(field[16]));
@@ -91,31 +91,26 @@ public class UserStore {
         order.setProfit(Double.parseDouble(field[19].replace(',', '.')));
         customer.setcustomer_ID(field[3]);
         customer.setcName(field[4]);
-
+        address.setAddress_ID(order.getAddress_ID());
         address.setCountry(field[6]);
         address.setCity(field[7]);
         address.setState(field[8]);
-        address.setPostalCode(Integer.parseInt(field[9]));
+        address.setPostalCode(order.getAddress_ID());
         product.setProduct_ID(field[11]);
         product.setCategory(field[12]);
         product.setSub_category(field[13]);
         product.setpName(field[14]);
 
-        if (!customerList.contains(customer)){
+        if (!customerList.contains(customer)) {
             customerList.add(customer);
         }
         if (!addressList.contains(address)) {
-            address.setAddress_ID(++aID);
             addressList.add(address);
         }
-        if (!productList.contains(product)){
+        if (!productList.contains(product)) {
             productList.add(product);
         }
-        for (Address a: addressList){
-            if (a.equals(address)){
-                order.setAddress_ID(a.getAddress_ID());
-            }
-        }
+
         orderList.add(order);
     }
 
