@@ -1,34 +1,25 @@
 package org.jflores.proyect.modelos;
 
 public enum Table {
-    CUSTOMER {
-        @Override
-        public String toString() {
-            return "INSERT INTO store.customer(customer_ID, cName)" +
-                    "VALUES(?,?)";
-        }
-    },
-    ADDRESS {
-        @Override
-        public String toString() {
-            return "INSERT INTO store.address(address_ID, country, state, city, postalCode) " +
-                    "VALUES(?,?,?,?,?)";
-        }
-    },
+    CUSTOMER("INSERT INTO store.customer(customer_ID, cName)" +
+            "VALUES(?,?)"),
 
-    PRODUCT {
-        @Override
-        public String toString() {
-            return "INSERT INTO store.product(product_ID, category, sub_category, pName) " +
-                    "VALUES(?,?,?,?)";
-        }
-    },
+    ADDRESS("INSERT INTO store.address(address_ID, country, state, city, postalCode) " +
+            "VALUES(?,?,?,?,?)"),
 
-    ORDER {
-        @Override
-        public String toString() {
-            return "INSERT INTO store.order(order_ID, orderDate, customer_ID, address_ID, product_ID, price, quantity, discount, total, profit)" +
-                    "VALUES(?,?,?,?,?,?,?,?,?,?)";
-        }
+    PRODUCT("INSERT INTO store.product(product_ID, category, sub_category, pName) " +
+            "VALUES(?,?,?,?)"),
+
+    ORDER("INSERT INTO store.order(order_ID, orderDate, customer_ID, address_ID, product_ID, price, quantity, discount, total, profit)" +
+            "VALUES(?,?,?,?,?,?,?,?,?,?)");
+    final String code;
+
+    Table(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return  code;
     }
 }
