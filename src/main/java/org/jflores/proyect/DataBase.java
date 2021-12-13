@@ -1,73 +1,81 @@
 package org.jflores.proyect;
 
-import org.jflores.proyect.modelos.Address;
-import org.jflores.proyect.modelos.Customer;
-import org.jflores.proyect.modelos.Order;
-import org.jflores.proyect.modelos.Product;
+import org.jflores.proyect.modelos.*;
 
 import java.sql.*;
+
 
 public class DataBase {
     private Connection getConnection() throws SQLException {
         return ConectionDB.getInstance();
     }
 
-    public void listToMysql(String sql) {
+    public void listToMysql(Table table) {
 
         try {
-            PreparedStatement stmt = getConnection().prepareStatement(sql);
+            PreparedStatement stmt = getConnection().prepareStatement(table.toString());
             getConnection().setAutoCommit(false);
-            if (sql.contains("store.customer")) {
-                for (Customer c: UserStore.customerList) {
 
-                    stmt.setString(1, c.getcustomer_ID());
-                    stmt.setString(2, c.getcName());
-                    stmt.addBatch();
-                }
-                System.out.println("se guardaron registros en  tabla customer con exito!");
-            }if (sql.contains("store.address")){
-                for (Address a: UserStore.addressList){
+            switch (table) {
+                case CUSTOMER:
+                    for (Customer c : UserStore.customerList) {
 
-                    stmt.setInt(1, a.getAddress_ID());
-                    stmt.setString(2, a.getCountry());
-                    stmt.setString(3, a.getState());
-                    stmt.setString(4, a.getCity());
-                    stmt.setInt(5, a.getPostalCode());
-                    stmt.addBatch();
-                }
-                System.out.println("se guardaron registros en  tabla address con exito!");
-            }if (sql.contains("store.product")) {
-                for (Product p: UserStore.productList){
+                        stmt.setString(1, c.getcustomer_ID());
+                        stmt.setString(2, c.getcName());
+                        stmt.addBatch();
 
-                    stmt.setString(1, p.getProduct_ID());
-                    stmt.setString(2, p.getCategory());
-                    stmt.setString(3, p.getSub_category());
-                    stmt.setString(4, p.getpName());
-                    stmt.addBatch();
-                }
-                System.out.println("se guardaron registros en  tabla product con exito!");
-            }if (sql.contains("store.order")){
+                    }
+                    System.out.println("se guardaron registros en  tabla customer con exito!");
+                    break;
 
-                for (Order o: UserStore.orderList){
+                case ADDRESS:
+                    for (Address a : UserStore.addressList) {
 
-                    stmt.setString(1, o.getOrder_ID());
-                    stmt.setString(2, o.getOrderDate());
-                    stmt.setString(3, o.getCustomer_ID());
-                    stmt.setInt(4, o.getAddress_ID());
-                    stmt.setString(5, o.getProduct_ID());
-                    stmt.setDouble(6, o.getPrice());
-                    stmt.setInt(7, o.getQuantity());
-                    stmt.setDouble(8, o.getDiscount());
-                    stmt.setDouble(9, o.getTotal());
-                    stmt.setDouble(10, o.getProfit());
-                    stmt.addBatch();
-                }
-                System.out.println("se guardaron registros en  tabla order con exito!");
+                        stmt.setInt(1, a.getAddress_ID());
+                        stmt.setString(2, a.getCountry());
+                        stmt.setString(3, a.getState());
+                        stmt.setString(4, a.getCity());
+                        stmt.setInt(5, a.getPostalCode());
+                        stmt.addBatch();
+                    }
+                    System.out.println("se guardaron registros en  tabla address con exito!");
+                    break;
+
+                case PRODUCT:
+                    for (Product p : UserStore.productList) {
+
+                        stmt.setString(1, p.getProduct_ID());
+                        stmt.setString(2, p.getCategory());
+                        stmt.setString(3, p.getSub_category());
+                        stmt.setString(4, p.getpName());
+                        stmt.addBatch();
+                    }
+                    System.out.println("se guardaron registros en  tabla product con exito!");
+                    break;
+
+                case ORDER:
+                    for (Order o : UserStore.orderList) {
+
+                        stmt.setString(1, o.getOrder_ID());
+                        stmt.setString(2, o.getOrderDate());
+                        stmt.setString(3, o.getCustomer_ID());
+                        stmt.setInt(4, o.getAddress_ID());
+                        stmt.setString(5, o.getProduct_ID());
+                        stmt.setDouble(6, o.getPrice());
+                        stmt.setInt(7, o.getQuantity());
+                        stmt.setDouble(8, o.getDiscount());
+                        stmt.setDouble(9, o.getTotal());
+                        stmt.setDouble(10, o.getProfit());
+                        stmt.addBatch();
+                    }
+                    System.out.println("se guardaron registros en  tabla order con exito!");
+                    break;
+
             }
             int[] counts = stmt.executeBatch();
             getConnection().commit();
-            for (int i: counts){
-                if (i==0){
+            for (int i : counts) {
+                if (i == 0) {
                     getConnection().rollback();
                 }
             }
@@ -78,7 +86,8 @@ public class DataBase {
             exception.printStackTrace();
         }
     }
-    public void borrarregistrosBD(){
+
+    public void borrarRegistrosBD() {
         try {
             Statement st = getConnection().createStatement();
 
