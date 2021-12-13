@@ -12,89 +12,84 @@ public class DataBase {
         return ConectionDB.getInstance();
     }
 
-    public void listToMysql() {
-        String sql = "INSERT INTO store.customer(customer_ID, cName)" +
-                "VALUES(?,?)";
-        try {
+    public void listToMysql(String sql) {
 
+        try {
+            PreparedStatement stmt = getConnection().prepareStatement(sql);
+            getConnection().setAutoCommit(false);
+            if (sql.contains("store.customer")) {
+                for (Customer c: UserStore.customerList) {
+
+                    stmt.setString(1, c.getcustomer_ID());
+                    stmt.setString(2, c.getcName());
+                    stmt.addBatch();
+                }
+                System.out.println("se guardaron registros en  tabla customer con exito!");
+            }if (sql.contains("store.address")){
+                for (Address a: UserStore.addressList){
+
+                    stmt.setInt(1, a.getAddress_ID());
+                    stmt.setString(2, a.getCountry());
+                    stmt.setString(3, a.getState());
+                    stmt.setString(4, a.getCity());
+                    stmt.setInt(5, a.getPostalCode());
+                    stmt.addBatch();
+                }
+                System.out.println("se guardaron registros en  tabla address con exito!");
+            }if (sql.contains("store.product")) {
+                for (Product p: UserStore.productList){
+
+                    stmt.setString(1, p.getProduct_ID());
+                    stmt.setString(2, p.getCategory());
+                    stmt.setString(3, p.getSub_category());
+                    stmt.setString(4, p.getpName());
+                    stmt.addBatch();
+                }
+                System.out.println("se guardaron registros en  tabla product con exito!");
+            }if (sql.contains("store.order")){
+
+                for (Order o: UserStore.orderList){
+
+                    stmt.setString(1, o.getOrder_ID());
+                    stmt.setString(2, o.getOrderDate());
+                    stmt.setString(3, o.getCustomer_ID());
+                    stmt.setInt(4, o.getAddress_ID());
+                    stmt.setString(5, o.getProduct_ID());
+                    stmt.setDouble(6, o.getPrice());
+                    stmt.setInt(7, o.getQuantity());
+                    stmt.setDouble(8, o.getDiscount());
+                    stmt.setDouble(9, o.getTotal());
+                    stmt.setDouble(10, o.getProfit());
+                    stmt.addBatch();
+                }
+                System.out.println("se guardaron registros en  tabla order con exito!");
+            }
+            int[] counts = stmt.executeBatch();
+            getConnection().commit();
+            for (int i: counts){
+                if (i==0){
+                    getConnection().rollback();
+                }
+            }
+            stmt.close();
+            getConnection().setAutoCommit(true);
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+    public void borrarregistrosBD(){
+        try {
             Statement st = getConnection().createStatement();
+
             st.executeUpdate("DELETE FROM store.order");
             st.executeUpdate("DELETE FROM store.address");
             st.executeUpdate("DELETE FROM store.product");
             st.executeUpdate("DELETE FROM store.customer");
             st.close();
 
-            PreparedStatement cStmt = getConnection().prepareStatement(sql);
-            getConnection().setAutoCommit(false);
-
-            for (Customer c: UserStore.customerList) {
-
-                cStmt.setString(1, c.getcustomer_ID());
-                cStmt.setString(2, c.getcName());
-                cStmt.addBatch();
-            }
-            cStmt.executeBatch();
-            getConnection().commit();
-            cStmt.close();
-
-             sql = "INSERT INTO store.address(address_ID, country, state, city, postalCode) " +
-                    "VALUES(?,?,?,?,?)";
-            PreparedStatement aStmt = getConnection().prepareStatement(sql);
-           for (Address a: UserStore.addressList){
-
-                    aStmt.setInt(1, a.getAddress_ID());
-                    aStmt.setString(2, a.getCountry());
-                    aStmt.setString(3, a.getState());
-                    aStmt.setString(4, a.getCity());
-                    aStmt.setInt(5, a.getPostalCode());
-                    aStmt.addBatch();
-                }
-            aStmt.executeBatch();
-            getConnection().commit();
-            aStmt.close();
-
-            sql = "INSERT INTO store.product(product_ID, category, sub_category, pName) " +
-                    "VALUES(?,?,?,?)";
-            PreparedStatement pStmt = getConnection().prepareStatement(sql);
-            for (Product p: UserStore.productList){
-
-                    pStmt.setString(1, p.getProduct_ID());
-                    pStmt.setString(2, p.getCategory());
-                    pStmt.setString(3, p.getSub_category());
-                    pStmt.setString(4, p.getpName());
-                    pStmt.addBatch();
-                }
-            pStmt.executeBatch();
-            getConnection().commit();
-            pStmt.close();
-
-            sql = "INSERT INTO store.order(order_ID, orderDate, customer_ID, address_ID, product_ID, price, quantity, discount, total, profit)" +
-                    "VALUES(?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement oStmt = getConnection().prepareStatement(sql);
-            for (Order o: UserStore.orderList){
-
-                    oStmt.setString(1, o.getOrder_ID());
-                    oStmt.setString(2, o.getOrderDate());
-                    oStmt.setString(3, o.getCustomer_ID());
-                    oStmt.setInt(4, o.getAddress_ID());
-                    oStmt.setString(5, o.getProduct_ID());
-                    oStmt.setDouble(6, o.getPrice());
-                    oStmt.setInt(7, o.getQuantity());
-                    oStmt.setDouble(8, o.getDiscount());
-                    oStmt.setDouble(9, o.getTotal());
-                    oStmt.setDouble(10, o.getProfit());
-                    oStmt.addBatch();
-                }
-            oStmt.executeBatch();
-            getConnection().commit();
-
-            System.out.println("guardado con exito!!");
-            oStmt.close();
-            getConnection().setAutoCommit(true);
-            getConnection().close();
-
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            System.out.println(exception);
         }
     }
 

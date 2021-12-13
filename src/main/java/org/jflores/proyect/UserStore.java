@@ -30,6 +30,15 @@ public class UserStore {
         DataBase dataBase = new DataBase();
 
         leerArchivoCSV("C:\\Users\\JoSe\\Desktop\\Proyecto1\\StoreData.csv");
+        dataBase.borrarregistrosBD();
+        dataBase.listToMysql("INSERT INTO store.customer(customer_ID, cName)" +
+                "VALUES(?,?)");
+        dataBase.listToMysql("INSERT INTO store.address(address_ID, country, state, city, postalCode) " +
+                "VALUES(?,?,?,?,?)");
+        dataBase.listToMysql("INSERT INTO store.product(product_ID, category, sub_category, pName) " +
+                "VALUES(?,?,?,?)");
+        dataBase.listToMysql("INSERT INTO store.order(order_ID, orderDate, customer_ID, address_ID, product_ID, price, quantity, discount, total, profit)" +
+                "VALUES(?,?,?,?,?,?,?,?,?,?)");
 
         fin = LocalDateTime.now();
         System.out.println(fin);
