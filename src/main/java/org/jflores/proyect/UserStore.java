@@ -1,7 +1,7 @@
 package org.jflores.proyect;
 
-import org.jflores.proyect.exceptions.ArchivoVacioException;
-import org.jflores.proyect.exceptions.DiferenteExtensionException;
+import org.jflores.proyect.exceptions.EmptyFileException;
+import org.jflores.proyect.exceptions.DifferentExtensionException;
 import org.jflores.proyect.modelos.*;
 
 import java.io.BufferedReader;
@@ -19,25 +19,25 @@ public class UserStore {
     static List<Product> productList = new ArrayList<>();
     static List<Order> orderList = new ArrayList<>();
     static List<Address> addressList = new ArrayList<>();
-    static int filaId = 1;
+    static int rowId = 1;
     public static final String FILE ="C:\\Users\\JoSe\\Desktop\\Proyecto1\\StoreData.csv";
     public static final String SEPARATOR = ";";
     public static final String EXTENSION_CSV = ".csv";
-    static LocalDateTime inicio;
-    static LocalDateTime fin;
+    static LocalDateTime star;
+    static LocalDateTime end;
 
 
     public static void main(String[] args) {
-        inicio = LocalDateTime.now();
-        System.out.println(inicio);
+        star = LocalDateTime.now();
+        System.out.println(star);
         DataBase dataBase = new DataBase();
         try {
             dataBase.cleanDbTables();
             csvToObjectLists(FILE);
             dataBase.listToDbTables();
 
-            fin = LocalDateTime.now();
-            System.out.println(fin);
+            end = LocalDateTime.now();
+            System.out.println(end);
         } catch (IOException e) {
             System.out.println("Archivo no encontrado!");
         }
@@ -46,32 +46,32 @@ public class UserStore {
     public static void csvToObjectLists(String file) throws IOException {
 
         if (!file.endsWith(EXTENSION_CSV)) {
-            throw new DiferenteExtensionException("archivo con diferente extension, seleccione un archivo .csv");
+            throw new DifferentExtensionException("archivo con diferente extension, seleccione un archivo .csv");
         }
 
-        BufferedReader bufferLectura = new BufferedReader(new FileReader(file));
-        bufferLectura.readLine();
-        String line = bufferLectura.readLine();
+        BufferedReader bufferRead = new BufferedReader(new FileReader(file));
+        bufferRead.readLine();
+        String line = bufferRead.readLine();
 
         if (line == null) {
-            throw new ArchivoVacioException("El archivo seleccionado esta vacio");
+            throw new EmptyFileException("El archivo seleccionado esta vacio");
         }
 
         while (line != null) {
-            ++filaId;
-            String[] contenido = line.split(SEPARATOR);
-            if (contenido.length > 0) {
-                rellenarListas(contenido);
+            ++rowId;
+            String[] content = line.split(SEPARATOR);
+            if (content.length > 0) {
+                fillLists(content);
             } else {
-                System.out.println("contenido en fila " + filaId + " esta vacio");
+                System.out.println("contenido en fila " + rowId + " esta vacio");
             }
-            line = bufferLectura.readLine();
+            line = bufferRead.readLine();
 
 
         }
     }
 
-    public static void rellenarListas(String[] field) {
+    public static void fillLists(String[] field) {
         boolean orderStatus = true;
         for (String l : field) {
             if (l.isEmpty() || field.length < 20) {
@@ -122,7 +122,7 @@ public class UserStore {
                 orderList.add(order);
             }
         } else {
-            System.out.println("se encontro un valor vacio en fila "+filaId +", la orden no se registrara");
+            System.out.println("se encontro un valor vacio en fila "+ rowId +", la orden no se registrara");
         }
     }
 }

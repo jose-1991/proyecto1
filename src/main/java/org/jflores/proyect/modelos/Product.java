@@ -53,10 +53,6 @@ public class Product {
         return Objects.equals(productId, product.productId);
     }
 
-    @Override
-    public int hashCode() {
-        return 0;
-    }
 
     @Override
     public String toString() {

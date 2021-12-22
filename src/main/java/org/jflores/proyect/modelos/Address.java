@@ -57,10 +57,6 @@ public class Address {
         return addressId == address.addressId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(addressId);
-    }
 
     @Override
     public String toString() {
