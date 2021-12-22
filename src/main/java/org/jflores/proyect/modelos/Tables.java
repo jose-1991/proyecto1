@@ -1,6 +1,6 @@
 package org.jflores.proyect.modelos;
 
-public enum Table {
+public enum Tables {
     CUSTOMER("INSERT INTO store.customer(customer_ID, cName)" +
             "VALUES(?,?)"),
 
@@ -14,7 +14,7 @@ public enum Table {
             "VALUES(?,?,?,?,?,?,?,?,?,?)");
     final String code;
 
-    Table(String code) {
+    Tables(String code) {
         this.code = code;
     }
 

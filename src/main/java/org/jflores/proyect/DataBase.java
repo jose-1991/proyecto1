@@ -10,84 +10,81 @@ public class DataBase {
         return ConectionDB.getInstance();
     }
 
-    public void listToMysql(Table table) {
+    public void listToDbTables() {
+        for (Tables t : Tables.values()) {
+            try {
+                PreparedStatement stmt = getConnection().prepareStatement(t.toString());
+                getConnection().setAutoCommit(false);
 
-        try {
-            PreparedStatement stmt = getConnection().prepareStatement(table.toString());
-            getConnection().setAutoCommit(false);
+                switch (t) {
+                    case CUSTOMER:
+                        for (Customer c : UserStore.customerList) {
 
-            switch (table) {
-                case CUSTOMER:
-                    for (Customer c : UserStore.customerList) {
+                            stmt.setString(1, c.getCustomerId());
+                            stmt.setString(2, c.getCustomerName());
+                            stmt.addBatch();
 
-                        stmt.setString(1, c.getcustomer_ID());
-                        stmt.setString(2, c.getcName());
-                        stmt.addBatch();
+                        }
+                        System.out.println("se guardaron registros en  tabla customer con exito!");
+                        break;
 
-                    }
-                    System.out.println("se guardaron registros en  tabla customer con exito!");
-                    break;
+                    case ADDRESS:
+                        for (Address a : UserStore.addressList) {
 
-                case ADDRESS:
-                    for (Address a : UserStore.addressList) {
+                            stmt.setInt(1, a.getAddressId());
+                            stmt.setString(2, a.getCountry());
+                            stmt.setString(3, a.getState());
+                            stmt.setString(4, a.getCity());
+                            stmt.setInt(5, a.getPostalCode());
+                            stmt.addBatch();
+                        }
+                        System.out.println("se guardaron registros en  tabla address con exito!");
+                        break;
 
-                        stmt.setInt(1, a.getAddress_ID());
-                        stmt.setString(2, a.getCountry());
-                        stmt.setString(3, a.getState());
-                        stmt.setString(4, a.getCity());
-                        stmt.setInt(5, a.getPostalCode());
-                        stmt.addBatch();
-                    }
-                    System.out.println("se guardaron registros en  tabla address con exito!");
-                    break;
+                    case PRODUCT:
+                        for (Product p : UserStore.productList) {
 
-                case PRODUCT:
-                    for (Product p : UserStore.productList) {
+                            stmt.setString(1, p.getProductId());
+                            stmt.setString(2, p.getCategory());
+                            stmt.setString(3, p.getSubCategory());
+                            stmt.setString(4, p.getProductName());
+                            stmt.addBatch();
+                        }
+                        System.out.println("se guardaron registros en  tabla product con exito!");
+                        break;
 
-                        stmt.setString(1, p.getProduct_ID());
-                        stmt.setString(2, p.getCategory());
-                        stmt.setString(3, p.getSub_category());
-                        stmt.setString(4, p.getpName());
-                        stmt.addBatch();
-                    }
-                    System.out.println("se guardaron registros en  tabla product con exito!");
-                    break;
+                    case ORDER:
+                        for (Order o : UserStore.orderList) {
 
-                case ORDER:
-                    for (Order o : UserStore.orderList) {
+                            stmt.setString(1, o.getOrderId());
+                            stmt.setString(2, o.getOrderDate());
+                            stmt.setString(3, o.getCustomerId());
+                            stmt.setInt(4, o.getAddressId());
+                            stmt.setString(5, o.getProductId());
+                            stmt.setDouble(6, o.getPrice());
+                            stmt.setInt(7, o.getQuantity());
+                            stmt.setDouble(8, o.getDiscount());
+                            stmt.setDouble(9, o.getTotal());
+                            stmt.setDouble(10, o.getProfit());
+                            stmt.addBatch();
+                        }
+                        System.out.println("se guardaron registros en  tabla order con exito!");
+                        break;
 
-                        stmt.setString(1, o.getOrder_ID());
-                        stmt.setString(2, o.getOrderDate());
-                        stmt.setString(3, o.getCustomer_ID());
-                        stmt.setInt(4, o.getAddress_ID());
-                        stmt.setString(5, o.getProduct_ID());
-                        stmt.setDouble(6, o.getPrice());
-                        stmt.setInt(7, o.getQuantity());
-                        stmt.setDouble(8, o.getDiscount());
-                        stmt.setDouble(9, o.getTotal());
-                        stmt.setDouble(10, o.getProfit());
-                        stmt.addBatch();
-                    }
-                    System.out.println("se guardaron registros en  tabla order con exito!");
-                    break;
-
-            }
-            int[] counts = stmt.executeBatch();
-            getConnection().commit();
-            for (int i : counts) {
-                if (i == 0) {
-                    getConnection().rollback();
                 }
-            }
-            stmt.close();
-            getConnection().setAutoCommit(true);
+                stmt.executeBatch();
+                getConnection().commit();
+                stmt.close();
 
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+
+            } catch (SQLException exception) {
+                System.out.println("hubo un error al tratar de guardar registros a la Base de Datos");
+                exception.printStackTrace();
+            }
         }
     }
 
-    public void borrarRegistrosBD() {
+    public void cleanDbTables() {
         try {
             Statement st = getConnection().createStatement();
 
@@ -98,7 +95,8 @@ public class DataBase {
             st.close();
 
         } catch (SQLException exception) {
-            System.out.println(exception);
+            System.out.println("hubo un error al tratar de eliminar los registros");
+            exception.printStackTrace();
         }
     }
 

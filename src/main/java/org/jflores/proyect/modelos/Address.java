@@ -3,18 +3,18 @@ package org.jflores.proyect.modelos;
 import java.util.Objects;
 
 public class Address {
-    private int address_ID;
+    private int addressId;
     private String country;
     private String state;
     private String city;
     private Integer postalCode;
 
-    public int getAddress_ID() {
-        return address_ID;
+    public int getAddressId() {
+        return addressId;
     }
 
-    public void setAddress_ID(int address_ID) {
-        this.address_ID = address_ID;
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
     public String getCountry() {
@@ -54,17 +54,17 @@ public class Address {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address address = (Address) o;
-        return Objects.equals(country, address.country) && Objects.equals(state, address.state) && Objects.equals(city, address.city) && Objects.equals(postalCode, address.postalCode);
+        return addressId == address.addressId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(country, state, city, postalCode);
+        return Objects.hash(addressId);
     }
 
     @Override
     public String toString() {
-        return address_ID + " | " +
+        return addressId + " | " +
                 country + " | " +
                 state + " | " +
                 city + " | " +

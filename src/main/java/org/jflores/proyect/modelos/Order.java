@@ -3,10 +3,10 @@ package org.jflores.proyect.modelos;
 import java.util.Objects;
 
 public class Order {
-    private String order_ID;
-    private String customer_ID;
-    private int address_ID;
-    private String product_ID;
+    private String orderId;
+    private String customerId;
+    private int addressId;
+    private String productId;
     private String orderDate;
     private Double price;
     private int quantity;
@@ -16,36 +16,36 @@ public class Order {
 
 
 
-    public String getOrder_ID() {
-        return order_ID;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_ID(String order_ID) {
-        this.order_ID = order_ID;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public String getCustomer_ID() {
-        return customer_ID;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_ID(String customer_ID) {
-        this.customer_ID = customer_ID;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
-    public int getAddress_ID() {
-        return address_ID;
+    public int getAddressId() {
+        return addressId;
     }
 
-    public void setAddress_ID(int address_ID) {
-        this.address_ID = address_ID;
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
-    public String getProduct_ID() {
-        return product_ID;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setProduct_ID(String product_ID) {
-        this.product_ID = product_ID;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getOrderDate() {
@@ -95,14 +95,26 @@ public class Order {
         this.profit = profit;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(orderId, order.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 
     @Override
     public String toString() {
-        return  order_ID + " ] " +
+        return  orderId + " ] " +
                 orderDate  + " | " +
-                customer_ID  + " | " +
-                address_ID + " | " +
-                product_ID + " | " +
+                customerId + " | " +
+                addressId + " | " +
+                productId + " | " +
                 price + " | " +
                 quantity + " | " +
                 discount + " | " +

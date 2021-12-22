@@ -4,20 +4,20 @@ import java.util.Objects;
 
 public class Product {
 
-    private String product_ID;
+    private String productId;
     private String category;
-    private String sub_category;
-    private String pName;
+    private String subCategory;
+    private String productName;
 
 
 
 
-    public String getProduct_ID() {
-        return product_ID;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setProduct_ID(String product_ID) {
-        this.product_ID = product_ID;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getCategory() {
@@ -28,22 +28,21 @@ public class Product {
         this.category = category;
     }
 
-    public String getSub_category() {
-        return sub_category;
+    public String getSubCategory() {
+        return subCategory;
     }
 
-    public void setSub_category(String sub_category) {
-        this.sub_category = sub_category;
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
     }
 
-    public String getpName() {
-        return pName;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setpName(String pName) {
-        this.pName = pName;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
-
 
 
     @Override
@@ -51,19 +50,19 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(product_ID, product.product_ID) && Objects.equals(category, product.category) && Objects.equals(sub_category, product.sub_category) && Objects.equals(pName, product.pName);
+        return Objects.equals(productId, product.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(product_ID, category, sub_category, pName);
+        return 0;
     }
 
     @Override
     public String toString() {
-        return product_ID + " | " +
+        return productId + " | " +
                 category + " | " +
-                sub_category + " | " +
-                pName + "\n";
+                subCategory + " | " +
+                productName + "\n";
     }
 }
