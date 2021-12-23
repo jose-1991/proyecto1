@@ -1,6 +1,5 @@
 package org.jflores.proyect.modelos;
 
-import java.util.Objects;
 
 public class Address {
     private int addressId;
