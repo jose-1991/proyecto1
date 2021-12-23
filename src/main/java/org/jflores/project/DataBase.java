@@ -1,16 +1,18 @@
-package org.jflores.proyect;
+package org.jflores.project;
 
-import org.jflores.proyect.modelos.*;
+import org.jflores.project.models.*;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DataBase {
     private Connection getConnection() throws SQLException {
         return ConectionDB.getInstance();
     }
 
-    public void listToDbTables() {
+    public void saveListsToDbTables() {
         for (Tables t : Tables.values()) {
             try {
                 PreparedStatement statement = getConnection().prepareStatement(t.toString());
@@ -23,11 +25,10 @@ public class DataBase {
                             statement.setString(1, c.getCustomerId());
                             statement.setString(2, c.getCustomerName());
                             statement.addBatch();
-
                         }
-                        System.out.println("se guardaron registros en  tabla customer con exito!");
-                        break;
+                        System.out.println("records were saved in customer table successfully!");
 
+                        break;
                     case ADDRESS:
                         for (Address a : UserStore.addressList) {
 
@@ -38,9 +39,9 @@ public class DataBase {
                             statement.setInt(5, a.getPostalCode());
                             statement.addBatch();
                         }
-                        System.out.println("se guardaron registros en  tabla address con exito!");
-                        break;
+                        System.out.println("records were saved in address table successfully!");
 
+                        break;
                     case PRODUCT:
                         for (Product p : UserStore.productList) {
 
@@ -50,9 +51,9 @@ public class DataBase {
                             statement.setString(4, p.getProductName());
                             statement.addBatch();
                         }
-                        System.out.println("se guardaron registros en  tabla product con exito!");
-                        break;
+                        System.out.println("records were saved in product table successfully!");
 
+                        break;
                     case ORDER:
                         for (Order o : UserStore.orderList) {
 
@@ -68,17 +69,15 @@ public class DataBase {
                             statement.setDouble(10, o.getProfit());
                             statement.addBatch();
                         }
-                        System.out.println("se guardaron registros en  tabla order con exito!");
+                        System.out.println("records were saved in order table successfully!");
                         break;
-
                 }
                 statement.executeBatch();
                 getConnection().commit();
                 statement.close();
 
-
             } catch (SQLException exception) {
-                System.out.println("hubo un error al tratar de guardar registros a la Base de Datos");
+                System.out.println("there was an error trying to save records to the Database");
                 exception.printStackTrace();
             }
         }
@@ -95,9 +94,8 @@ public class DataBase {
             statement.close();
 
         } catch (SQLException exception) {
-            System.out.println("hubo un error al tratar de eliminar los registros");
+            System.out.println("there was an error trying to delete the records");
             exception.printStackTrace();
         }
     }
-
 }

@@ -1,6 +1,4 @@
-package org.jflores.proyect.modelos;
-
-import java.util.Objects;
+package org.jflores.project.models;
 
 public class Address {
     private int addressId;
@@ -57,13 +55,8 @@ public class Address {
         return addressId == address.addressId;
     }
 
-
     @Override
     public String toString() {
-        return addressId + " | " +
-                country + " | " +
-                state + " | " +
-                city + " | " +
-                postalCode + "\n";
+        return addressId + " | " + country + " | " + state + " | " + city + " | " + postalCode + "\n";
     }
 }

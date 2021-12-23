@@ -1,4 +1,4 @@
-package org.jflores.proyect.modelos;
+package org.jflores.project.models;
 
 import java.util.Objects;
 
@@ -6,8 +6,6 @@ public class Customer {
 
     private String customerId;
     private String customerName;
-
-
 
     public String getCustomerId() {
         return customerId;
@@ -25,7 +23,6 @@ public class Customer {
         this.customerName = customerName;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -34,11 +31,8 @@ public class Customer {
         return Objects.equals(customerId, customer.customerId);
     }
 
-
     @Override
     public String toString() {
-        return  customerId + " | " +
-                customerName + "\n";
-
+        return customerId + " | " + customerName + "\n";
     }
 }
