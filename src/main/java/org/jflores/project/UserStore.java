@@ -1,4 +1,11 @@
-package org.jflores.proyect;
+package org.jflores.project;
+
+import org.jflores.project.exceptions.DifferentExtensionException;
+import org.jflores.project.exceptions.EmptyFileException;
+import org.jflores.project.models.Address;
+import org.jflores.project.models.Customer;
+import org.jflores.project.models.Order;
+import org.jflores.project.models.Product;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,10 +13,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jflores.proyect.exceptions.EmptyFileException;
-import org.jflores.proyect.exceptions.DifferentExtensionException;
-import org.jflores.proyect.modelos.*;
 
 public class UserStore {
 
@@ -23,7 +26,6 @@ public class UserStore {
     static int nRow = 1;
     static LocalDateTime star;
     static LocalDateTime end;
-
 
     public static void main(String[] args) {
         star = LocalDateTime.now();
@@ -56,7 +58,7 @@ public class UserStore {
             nRow++;
             String[] content = line.split(SEPARATOR);
             if (content.length > 0) {
-                fillLists(content);
+                fillOutLists(content);
             } else {
                 System.out.println("content in row" + nRow + " is empty");
             }
@@ -64,18 +66,17 @@ public class UserStore {
         }
     }
 
-
-    public static void fillLists(String[] content) {
-        boolean isOrderValid = true;
+    public static void fillOutLists(String[] content) {
+        boolean isValidOrder = true;
         boolean isEmptyValue;
         for (String l : content) {
-             isEmptyValue = l.isEmpty() || content.length < 20;
+            isEmptyValue = l.isEmpty() || content.length < 20;
             if (isEmptyValue) {
-                isOrderValid = false;
+                isValidOrder = false;
                 break;
             }
         }
-        if (isOrderValid) {
+        if (isValidOrder) {
             Customer customer = new Customer();
             Address address = new Address();
             Product product = new Product();
@@ -113,14 +114,14 @@ public class UserStore {
                 productList.add(product);
             }
             if (orderList.contains(order)) {
-                System.out.println("orderId:" + order.getOrderId() + "  duplicate, this order will not be registered");
+                System.out.println(
+                        "orderId:" + order.getOrderId() + "  duplicate, this order will not be registered");
             } else {
                 orderList.add(order);
             }
         } else {
-            System.out.println("an empty value was found in a row" + nRow + ", this order will not be registered");
+            System.out.println(
+                    "an empty value was found in a row" + nRow + ", this order will not be registered");
         }
     }
 }
-
-

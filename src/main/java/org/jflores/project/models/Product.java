@@ -1,4 +1,4 @@
-package org.jflores.proyect.modelos;
+package org.jflores.project.models;
 
 import java.util.Objects;
 
@@ -8,9 +8,6 @@ public class Product {
     private String category;
     private String subCategory;
     private String productName;
-
-
-
 
     public String getProductId() {
         return productId;
@@ -44,7 +41,6 @@ public class Product {
         this.productName = productName;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,12 +49,8 @@ public class Product {
         return Objects.equals(productId, product.productId);
     }
 
-
     @Override
     public String toString() {
-        return productId + " | " +
-                category + " | " +
-                subCategory + " | " +
-                productName + "\n";
+        return productId + " | " + category + " | " + subCategory + " | " + productName + "\n";
     }
 }

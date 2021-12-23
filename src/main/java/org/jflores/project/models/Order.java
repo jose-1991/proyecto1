@@ -1,4 +1,4 @@
-package org.jflores.proyect.modelos;
+package org.jflores.project.models;
 
 import java.util.Objects;
 
@@ -13,8 +13,6 @@ public class Order {
     private Double discount;
     private Double total;
     private Double profit;
-
-
 
     public String getOrderId() {
         return orderId;
@@ -55,6 +53,7 @@ public class Order {
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
+
     public Double getPrice() {
         return price;
     }
@@ -105,15 +104,25 @@ public class Order {
 
     @Override
     public String toString() {
-        return  orderId + " ] " +
-                orderDate  + " | " +
-                customerId + " | " +
-                addressId + " | " +
-                productId + " | " +
-                price + " | " +
-                quantity + " | " +
-                discount + " | " +
-                total + " | "+
-                profit + "\n";
+        return orderId
+                + " ] "
+                + orderDate
+                + " | "
+                + customerId
+                + " | "
+                + addressId
+                + " | "
+                + productId
+                + " | "
+                + price
+                + " | "
+                + quantity
+                + " | "
+                + discount
+                + " | "
+                + total
+                + " | "
+                + profit
+                + "\n";
     }
 }

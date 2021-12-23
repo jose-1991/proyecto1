@@ -1,4 +1,4 @@
-package org.jflores.proyect;
+package org.jflores.project;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +17,4 @@ public class ConectionDB {
         }
         return connection;
     }
-
-
 }

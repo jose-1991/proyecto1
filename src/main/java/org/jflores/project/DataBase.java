@@ -1,9 +1,11 @@
-package org.jflores.proyect;
+package org.jflores.project;
 
-import org.jflores.proyect.modelos.*;
+import org.jflores.project.models.*;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DataBase {
     private Connection getConnection() throws SQLException {
@@ -16,17 +18,18 @@ public class DataBase {
                 PreparedStatement statement = getConnection().prepareStatement(t.toString());
                 getConnection().setAutoCommit(false);
 
-                switch (t) {  case CUSTOMER:
+                switch (t) {
+                    case CUSTOMER:
                         for (Customer c : UserStore.customerList) {
 
                             statement.setString(1, c.getCustomerId());
                             statement.setString(2, c.getCustomerName());
                             statement.addBatch();
-
                         }
                         System.out.println("records were saved in customer table successfully!");
 
-                        break;  case ADDRESS:
+                        break;
+                    case ADDRESS:
                         for (Address a : UserStore.addressList) {
 
                             statement.setInt(1, a.getAddressId());
@@ -38,7 +41,8 @@ public class DataBase {
                         }
                         System.out.println("records were saved in address table successfully!");
 
-                        break;  case PRODUCT:
+                        break;
+                    case PRODUCT:
                         for (Product p : UserStore.productList) {
 
                             statement.setString(1, p.getProductId());
@@ -49,7 +53,8 @@ public class DataBase {
                         }
                         System.out.println("records were saved in product table successfully!");
 
-                        break; case ORDER:
+                        break;
+                    case ORDER:
                         for (Order o : UserStore.orderList) {
 
                             statement.setString(1, o.getOrderId());
@@ -66,12 +71,10 @@ public class DataBase {
                         }
                         System.out.println("records were saved in order table successfully!");
                         break;
-
                 }
                 statement.executeBatch();
                 getConnection().commit();
                 statement.close();
-
 
             } catch (SQLException exception) {
                 System.out.println("there was an error trying to save records to the Database");
@@ -95,5 +98,4 @@ public class DataBase {
             exception.printStackTrace();
         }
     }
-
 }
