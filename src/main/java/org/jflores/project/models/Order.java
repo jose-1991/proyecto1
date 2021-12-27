@@ -10,9 +10,9 @@ public class Order {
     private String orderDate;
     private Double price;
     private int quantity;
-    private Double discount;
-    private Double total;
-    private Double profit;
+    private double discount;
+    private double total;
+    private double profit;
 
     public String getOrderId() {
         return orderId;
@@ -54,11 +54,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -70,27 +70,27 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public Double getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Double discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 
-    public Double getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
-    public Double getProfit() {
+    public double getProfit() {
         return profit;
     }
 
-    public void setProfit(Double profit) {
+    public void setProfit(double profit) {
         this.profit = profit;
     }
 
@@ -105,7 +105,7 @@ public class Order {
     @Override
     public String toString() {
         return orderId
-                + " ] "
+                + " | "
                 + orderDate
                 + " | "
                 + customerId

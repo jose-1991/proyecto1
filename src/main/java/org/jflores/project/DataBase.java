@@ -1,11 +1,9 @@
 package org.jflores.project;
 
+import org.jflores.project.exceptions.IdValueNotFoundException;
 import org.jflores.project.models.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DataBase {
     private Connection getConnection() throws SQLException {
@@ -36,7 +34,6 @@ public class DataBase {
                             statement.setString(2, a.getCountry());
                             statement.setString(3, a.getState());
                             statement.setString(4, a.getCity());
-                            statement.setInt(5, a.getPostalCode());
                             statement.addBatch();
                         }
                         System.out.println("records were saved in address table successfully!");
@@ -97,5 +94,60 @@ public class DataBase {
             System.out.println("there was an error trying to delete the records");
             exception.printStackTrace();
         }
+    }
+
+    public String findIdValue(String name, Tables table) {
+        String valorId = "";
+        String columnLabel = "";
+        String query = "";
+        switch (table) {
+            case CUSTOMER:
+                query = "SELECT customer_ID FROM store.customer WHERE cName = '" + name + "'";
+                columnLabel = "customer_ID";
+                break;
+            case PRODUCT:
+                query = "SELECT product_ID FROM store.product WHERE pName = '" + name + "'";
+                columnLabel = "product_ID";
+                break;
+        }
+        try (Statement statement = getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                valorId = resultSet.getString(columnLabel);
+            }
+            if (valorId.isEmpty()) {
+                throw new IdValueNotFoundException("error! -> '" + name + "' not found in database");
+            }
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return valorId;
+    }
+
+    public void addNewOrderToDb(Order order) {
+        String query = "INSERT INTO store.order(order_ID, orderDate, customer_ID, address_ID, product_ID, price, quantity, discount, total, profit)"
+                + "VALUES(?,?,?,?,?,?,?,?,?,?)";
+
+        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+            getConnection().setAutoCommit(true);
+            statement.setString(1, order.getOrderId());
+            statement.setString(2, order.getOrderDate());
+            statement.setString(3, order.getCustomerId());
+            statement.setInt(4, order.getAddressId());
+            statement.setString(5, order.getProductId());
+            statement.setDouble(6, order.getPrice());
+            statement.setInt(7, order.getQuantity());
+            statement.setDouble(8, order.getDiscount());
+            statement.setDouble(9, order.getTotal());
+            statement.setDouble(10, order.getProfit());
+            statement.executeUpdate();
+
+            System.out.println("order saved successfully");
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
     }
 }

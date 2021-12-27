@@ -4,8 +4,8 @@ public enum Tables {
     CUSTOMER("INSERT INTO store.customer(customer_ID, cName)" + "VALUES(?,?)"),
 
     ADDRESS(
-            "INSERT INTO store.address(address_ID, country, state, city, postalCode) "
-                    + "VALUES(?,?,?,?,?)"),
+            "INSERT INTO store.address(address_ID, country, state, city) "
+                    + "VALUES(?,?,?,?)"),
 
     PRODUCT(
             "INSERT INTO store.product(product_ID, category, sub_category, pName) " + "VALUES(?,?,?,?)"),

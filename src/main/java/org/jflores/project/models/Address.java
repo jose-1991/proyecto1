@@ -5,7 +5,6 @@ public class Address {
     private String country;
     private String state;
     private String city;
-    private Integer postalCode;
 
     public int getAddressId() {
         return addressId;
@@ -39,13 +38,6 @@ public class Address {
         this.city = city;
     }
 
-    public int getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -57,6 +49,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return addressId + " | " + country + " | " + state + " | " + city + " | " + postalCode + "\n";
+        return addressId + " | " + country + " | " + state + " | " + city + "\n";
     }
 }
