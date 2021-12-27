@@ -33,8 +33,8 @@ public class UserStore {
         Order order = new Order();
         DataBase dataBase = new DataBase();
         NewOrder newOrder = new NewOrder();
-        dataBase.cleanDbTables();
         try {
+            dataBase.cleanDbTables();
             saveCsvToObjectLists(FILE_NAME);
             dataBase.saveListsToDbTables();
             newOrder.createNewOrder(order);

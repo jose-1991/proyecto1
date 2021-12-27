@@ -31,8 +31,7 @@ public class NewOrder {
             System.out.println("===== enter product discount (use ',' for decimal) =====");
             order.setDiscount(validateDiscount());
             System.out.println("===== enter zip code =====");
-            int postalCode = scanner.nextInt();
-            dataBase.findIdValue(String.valueOf(postalCode), Tables.ADDRESS);
+            order.setAddressId(scanner.nextInt());
             order.setOrderDate(getCurrentDate());
             double total = computeTotal(order.getPrice(), order.getQuantity(), order.getDiscount());
             double roundedTotal = Math.round(total * 100.0) / 100.0;
