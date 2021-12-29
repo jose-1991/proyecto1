@@ -8,7 +8,7 @@ public class Order {
     private int addressId;
     private String productId;
     private String orderDate;
-    private Double price;
+    private double price;
     private int quantity;
     private double discount;
     private double total;

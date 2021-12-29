@@ -100,14 +100,19 @@ public class DataBase {
         String valorId = "";
         String columnLabel = "";
         String query = "";
+        String errorMessage = "";
         switch (table) {
             case CUSTOMER:
                 query = "SELECT customer_ID FROM store.customer WHERE cName = '" + name + "'";
                 columnLabel = "customer_ID";
+                errorMessage = "An error has occurred!\n" +
+                        "customer name: '" + name + "' not found in customer table";
                 break;
             case PRODUCT:
                 query = "SELECT product_ID FROM store.product WHERE pName = '" + name + "'";
                 columnLabel = "product_ID";
+                errorMessage = "An error has occurred!\n" +
+                        "product name: '" + name + "' not found in product table";
                 break;
         }
         try (Statement statement = getConnection().createStatement();
@@ -116,7 +121,8 @@ public class DataBase {
                 valorId = resultSet.getString(columnLabel);
             }
             if (valorId.isEmpty()) {
-                throw new IdValueNotFoundException("error! -> '" + name + "' not found in database");
+                throw new IdValueNotFoundException(errorMessage);
+
             }
 
         } catch (SQLException exception) {
@@ -130,7 +136,7 @@ public class DataBase {
                 + "VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
-            getConnection().setAutoCommit(true);
+//            getConnection().setAutoCommit(true);
             statement.setString(1, order.getOrderId());
             statement.setString(2, order.getOrderDate());
             statement.setString(3, order.getCustomerId());
@@ -148,6 +154,25 @@ public class DataBase {
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
+
+    }
+
+    public boolean isEmpty() {
+        String query = "SELECT count(*) FROM store.order";
+
+        try (Statement statement = getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                int count = resultSet.getInt("count(*)");
+                if (count >= 4407) {
+                    System.out.println(count);
+                    return false;
+                }
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return true;
 
     }
 }

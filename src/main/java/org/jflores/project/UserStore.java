@@ -34,9 +34,11 @@ public class UserStore {
         DataBase dataBase = new DataBase();
         NewOrder newOrder = new NewOrder();
         try {
-            dataBase.cleanDbTables();
-            saveCsvToObjectLists(FILE_NAME);
-            dataBase.saveListsToDbTables();
+            if (dataBase.isEmpty()) {
+                dataBase.cleanDbTables();
+                saveCsvToObjectLists(FILE_NAME);
+                dataBase.saveListsToDbTables();
+            }
             newOrder.createNewOrder(order);
             dataBase.addNewOrderToDb(order);
         } catch (IOException e) {
