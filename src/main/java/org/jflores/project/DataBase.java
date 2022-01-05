@@ -136,7 +136,6 @@ public class DataBase {
                 + "VALUES(?,?,?,?,?,?,?,?,?,?)";
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
-//            getConnection().setAutoCommit(true);
             statement.setString(1, order.getOrderId());
             statement.setString(2, order.getOrderDate());
             statement.setString(3, order.getCustomerId());
@@ -164,8 +163,7 @@ public class DataBase {
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 int count = resultSet.getInt("count(*)");
-                if (count >= 4407) {
-                    System.out.println(count);
+                if (count > 0) {
                     return false;
                 }
             }

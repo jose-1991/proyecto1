@@ -35,7 +35,6 @@ public class UserStore {
         NewOrder newOrder = new NewOrder();
         try {
             if (dataBase.isEmpty()) {
-                dataBase.cleanDbTables();
                 saveCsvToObjectLists(FILE_NAME);
                 dataBase.saveListsToDbTables();
             }

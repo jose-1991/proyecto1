@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class NewOrder {
+    final static String TRY_AGAIN_MESSAGE = "please try again";
     static final String COUNTRY_US = "US";
     static final String SEPARATOR_ORDER_ID = "-";
     Scanner scanner = new Scanner(System.in);
@@ -38,7 +39,7 @@ public class NewOrder {
         double discount = Double.parseDouble(validateData(Validations.DISCOUNT));
         order.setDiscount(discount);
 
-        System.out.println("===== enter zip code   (from 4 to 5 numbers)  =====");
+        System.out.println("===== enter zip code   (from 4 to 5 digits)  =====");
         int postalCode = Integer.parseInt(validateData(Validations.POSTAL_CODE));
         order.setAddressId(postalCode);
         order.setOrderDate(getCurrentDate());
@@ -54,66 +55,107 @@ public class NewOrder {
 
     }
 
+
     public String validateData(Validations value) {
         String data;
-        String regularExpresion = "";
-        String errorMessage = "";
+        String regularExpression = "";
+        String firstErrorMessage = value.toString() + " entered contains letters";
+        boolean isCustomer = false;
+        boolean isProduct = false;
+        boolean isQuantity = false;
+        boolean isPrice = false;
+        boolean isDiscount = false;
+        boolean isPostalCode = false;
         switch (value) {
             case CUSTOMER:
-                regularExpresion = "^(?![\\s])[A-Za-z\\s\\p{L}']+$";
-                errorMessage = "the customer's name entered:\n" +
-                        "- contains numbers\n" +
-                        "- has an invalid character";
+                regularExpression = "^[A-Za-z\\s']+$";
+                firstErrorMessage = "the customer name entered contains numbers";
+                isCustomer = true;
                 break;
             case PRODUCT:
-                regularExpresion = "^(?![\\s])[\\p{all}]+";
-                errorMessage = "the product name entered:\n" +
-                        "- contains empty spaces";
+                regularExpression = "^[\\p{all}]+$";
+                isProduct = true;
                 break;
             case QUANTITY:
-                regularExpresion = "^(?![\\s])[0-9]+$";
-                errorMessage = "the quantity of the product entered:\n" +
-                        "- is negative\n" +
-                        "- has an invalid character";
+                regularExpression = "^([-])?[0-9]+$";
+                isQuantity = true;
                 break;
+
             case PRICE:
-                regularExpresion = "^(?![\\s])[0-9]+(\\.[0-9]{1,2}+)?$";
-                errorMessage = "the price of the product entered:\n" +
-                        "- is negative\n" +
-                        "- ',' were used for decimal\n" +
-                        "- has an invalid character\n" +
-                        "- more than 2 decimal places";
+                regularExpression = "^([-])?[0-9]+([.])?[0-9]*$";
+
+                isPrice = true;
                 break;
             case DISCOUNT:
-                regularExpresion = "^(?![\\s])[0]+(\\.[0-9]{1,2}+)?$";
-                errorMessage = "the discount of the product entered:\n" +
-                        "- is not within the range of 0.0 to 0.9\n" +
-                        "- ',' were used for decimal\n" +
-                        "- is negative\n" +
-                        "- has an invalid character\n" +
-                        "- more than 2 decimal places";
+                regularExpression = "^([-])?[0-9]+([.])?[0-9]*$";
+                isDiscount = true;
+
                 break;
+
             case POSTAL_CODE:
-                regularExpresion = "^(?![\\s])[0-9]{4,5}+$";
-                errorMessage = "the postal code entered:\n" +
-                        "- is out of range\n" +
-                        "- is negative\n" +
-                        "- has an invalid character";
+                regularExpression = "^([-])?[0-9]+$";
+                isPostalCode = true;
                 break;
+
         }
         while (true) {
-            if (value.equals(Validations.CUSTOMER) || value.equals(Validations.PRODUCT)) {
-                data = scanner.nextLine();
-            } else {
-                data = scanner.next();
-            }
+            data = scanner.nextLine().trim();
 
-            if (data.matches(regularExpresion)) {
+            if (data.matches(regularExpression)) {
+                if (!(isCustomer || isProduct)) {
+                    if (data.startsWith("-")) {
+                        System.out.println("Error! The " + value.toString() + " entered is negative\n" +
+                                TRY_AGAIN_MESSAGE);
+                        continue;
+                    }
+                    if (isPrice || isDiscount) {
+                        if (data.matches("^[0-9]+(\\.?[0-9]{3,})+$")) {
+                            System.out.println("Error! the " + value.toString() + " cannot have more than 2 decimal places\n" +
+                                    TRY_AGAIN_MESSAGE);
+                            continue;
+                        }
+                    }
+                    if (isDiscount) {
+                        if (!data.startsWith("0")) {
+                            System.out.println("Error! the discount is out to range (from 0.0 to 0.9)\n" +
+                                    TRY_AGAIN_MESSAGE);
+                            continue;
+                        }
+                    }
+                    if (isQuantity || isPrice) {
+                        if (data.equals("0")) {
+                            System.out.println("Error! the " + value.toString() + " cannot be 0\n" +
+                                    TRY_AGAIN_MESSAGE);
+                            continue;
+                        }
+                    }
+                    if (isPostalCode) {
+                        if (data.length() < 4 || data.length() > 5) {
+                            System.out.println("Error! the zip code must be 4 o 5 digits\n" +
+                                    TRY_AGAIN_MESSAGE);
+                            continue;
+                        }
+                    }
+                    return data;
+                }
                 return data;
             } else {
-                System.out.println("An error has occurred!  " + "DATA ENTERED: " + data + "\n" + "check that the data is not empty...\n" +
-                        "or one of the following options\n" + errorMessage +
-                        "\nPlease try again:");
+                if (data.isEmpty()) {
+                    System.out.println("Error! the " + value.toString() + " entered is empty");
+                }
+                if (data.matches("^[a-zA-Z0-9\\s]+$")) {
+                    System.out.println("Error! " + firstErrorMessage +
+                            "\nplease try again");
+                    continue;
+                }
+                if (data.matches("^[\\p{all}]+$")) {
+                    System.out.println("Error! the " + value.toString() + " contains invalid characters");
+                    if (isPrice || isDiscount) {
+                        System.out.println("(use '.' up to 2 decimal places)");
+                    }
+                }
+
+                System.out.println("please try again:");
             }
         }
     }
