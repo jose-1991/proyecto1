@@ -30,17 +30,23 @@ public class UserStore {
     public static void main(String[] args) {
         star = LocalDateTime.now();
         System.out.println(star);
+        Order order = new Order();
         DataBase dataBase = new DataBase();
+        NewOrder newOrder = new NewOrder();
         try {
-            dataBase.cleanDbTables();
-            saveCsvToObjectLists(FILE_NAME);
-            dataBase.saveListsToDbTables();
-            end = LocalDateTime.now();
-            System.out.println(end);
+            if (dataBase.isEmpty()) {
+                saveCsvToObjectLists(FILE_NAME);
+                dataBase.saveListsToDbTables();
+            }
+            newOrder.createNewOrder(order);
+            dataBase.addNewOrderToDb(order);
         } catch (IOException e) {
             System.out.println("Archivo no encontrado!");
         }
+        end = LocalDateTime.now();
+        System.out.println(end);
     }
+
 
     public static void saveCsvToObjectLists(String fileName) throws IOException {
 
@@ -98,7 +104,6 @@ public class UserStore {
             address.setCountry(content[6]);
             address.setCity(content[7]);
             address.setState(content[8]);
-            address.setPostalCode(order.getAddressId());
             product.setProductId(content[11]);
             product.setCategory(content[12]);
             product.setSubCategory(content[13]);
@@ -124,4 +129,5 @@ public class UserStore {
                     "an empty value was found in a row" + nRow + ", this order will not be registered");
         }
     }
+
 }
