@@ -8,15 +8,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-public class NewOrder {
+public class OrderService {
     final static String TRY_AGAIN_MESSAGE = "please try again";
     static final String COUNTRY_US = "US";
     static final String SEPARATOR_ORDER_ID = "-";
     Scanner scanner = new Scanner(System.in);
+    DataBase dataBase = new DataBase();
+    Order order = new Order();
+
+    public void createNewOrder() {
 
 
-    public void createNewOrder(Order order) {
-        DataBase dataBase = new DataBase();
         order.setOrderId(getNewOrderId());
 
         System.out.println("===== enter the customer's first and last name =====");

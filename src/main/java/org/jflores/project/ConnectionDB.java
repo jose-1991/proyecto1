@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConectionDB {
+public class ConnectionDB {
 
     private static String url = "jdbc:mysql://localhost:3306/store";
     private static String username = "root";
