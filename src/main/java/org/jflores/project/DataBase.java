@@ -3,14 +3,27 @@ package org.jflores.project;
 import org.jflores.project.exceptions.IdValueNotFoundException;
 import org.jflores.project.models.*;
 
+import java.io.IOException;
 import java.sql.*;
 
 public class DataBase {
-    private Connection getConnection() throws SQLException {
-        return ConectionDB.getInstance();
+    public DataBase() {
+        if (isEmpty()) {
+            saveListsToDbTables();
+        }
     }
 
+    private Connection getConnection() throws SQLException {
+        return ConnectionDB.getInstance();
+    }
+
+
     public void saveListsToDbTables() {
+        try {
+            FileHelper.convertCsvToObjectLists();
+        } catch (IOException e) {
+            throw new RuntimeException("there was an error trying to read the file");
+        }
         for (Tables t : Tables.values()) {
             try {
                 PreparedStatement statement = getConnection().prepareStatement(t.toString());
@@ -18,7 +31,7 @@ public class DataBase {
 
                 switch (t) {
                     case CUSTOMER:
-                        for (Customer c : UserStore.customerList) {
+                        for (Customer c : FileHelper.customerList) {
 
                             statement.setString(1, c.getCustomerId());
                             statement.setString(2, c.getCustomerName());
@@ -28,7 +41,7 @@ public class DataBase {
 
                         break;
                     case ADDRESS:
-                        for (Address a : UserStore.addressList) {
+                        for (Address a : FileHelper.addressList) {
 
                             statement.setInt(1, a.getAddressId());
                             statement.setString(2, a.getCountry());
@@ -40,7 +53,7 @@ public class DataBase {
 
                         break;
                     case PRODUCT:
-                        for (Product p : UserStore.productList) {
+                        for (Product p : FileHelper.productList) {
 
                             statement.setString(1, p.getProductId());
                             statement.setString(2, p.getCategory());
@@ -52,7 +65,7 @@ public class DataBase {
 
                         break;
                     case ORDER:
-                        for (Order o : UserStore.orderList) {
+                        for (Order o : FileHelper.orderList) {
 
                             statement.setString(1, o.getOrderId());
                             statement.setString(2, o.getOrderDate());
@@ -156,7 +169,7 @@ public class DataBase {
 
     }
 
-    public boolean isEmpty() {
+    private boolean isEmpty() {
         String query = "SELECT count(*) FROM store.order";
 
         try (Statement statement = getConnection().createStatement();
