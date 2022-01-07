@@ -6,8 +6,8 @@ import org.jflores.project.models.*;
 import java.io.IOException;
 import java.sql.*;
 
-public class DataBase {
-    public DataBase() {
+public class OrderDAO {
+    public OrderDAO() {
         if (isEmpty()) {
             saveListsToDbTables();
         }
@@ -208,7 +208,8 @@ public class DataBase {
 
     }
 
-    public void getOrderRecord(String id, Order order) {
+    public Order getOrderRecord(String id) {
+        Order order = new Order();
         String query = "SELECT * FROM store.order WHERE order_ID = '" + id + "'";
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -226,6 +227,7 @@ public class DataBase {
         } catch (SQLException exception) {
             System.out.println("there was an error trying to get an order record");
         }
+        return order;
 
 
     }

@@ -11,11 +11,10 @@ public class UserStore {
                 " 1) Ingresar una nueva orden\n" +
                 " 2) modificar una orden\n");
 
-        int option = Integer.parseInt(orderService.validateData(Validations.OPTION));
-
+        int option = Integer.parseInt(ValidationHelper.validateData(Validations.OPTION));
         switch (option) {
             case 1:
-                orderService.AddNewOrder();
+                orderService.addNewOrder();
                 break;
             case 2:
                 orderService.modifyOrder();
