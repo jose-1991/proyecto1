@@ -13,7 +13,7 @@ public class ValidationHelper {
     public static final String FORMAT_ORDER_ID ="^(US-)[0-9]{4}([-])?[0-9]{6}$";
     public static final String NUMBERS_LETTERS = "^[a-zA-Z0-9\\s]+$";
     public static final String ONLY_TWO_DECIMAL ="^[0-9]+(\\.?[0-9]{3,})+$";
-    public static final String ONLY_VALID_OPTIONS ="^[12]?";
+    public static final String ONLY_VALID_OPTIONS ="^[123]?";
     public static String validateData(Validations value) {
         String data;
         String regularExpression = "";

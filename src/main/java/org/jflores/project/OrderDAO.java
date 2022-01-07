@@ -214,6 +214,7 @@ public class OrderDAO {
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
+                order.setOrderId(resultSet.getString("order_ID"));
                 order.setOrderDate(resultSet.getString("orderDate"));
                 order.setCustomerId(resultSet.getString("customer_ID"));
                 order.setAddressId(resultSet.getInt("address_ID"));
@@ -230,5 +231,17 @@ public class OrderDAO {
         return order;
 
 
+    }
+    public void deleteOrderOfDb(String orderId){
+        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM store.order WHERE order_ID =?")) {
+            stmt.setString(1, orderId);
+            stmt.executeUpdate();
+
+            System.out.println("order removed successfully!");
+
+        } catch (SQLException e) {
+            System.out.println("there was an error trying to delete an order");
+            e.printStackTrace();
+        }
     }
 }

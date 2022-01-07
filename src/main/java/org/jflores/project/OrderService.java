@@ -60,10 +60,10 @@ public class OrderService {
         String orderId = validateData(Validations.ORDER_ID);
         Order order = orderDAO.getOrderRecord(orderId);
         System.out.println(order);
-        System.out.println("===== enter the new quantity for this order");
+        System.out.println("===== enter the new quantity for this order =====");
         int quantity = Integer.parseInt(validateData(Validations.QUANTITY));
         order.setQuantity(quantity);
-        System.out.println("===== enter the new discount for this order");
+        System.out.println("===== enter the new discount for this order =====");
         double discount = Double.parseDouble(validateData(Validations.DISCOUNT));
         order.setDiscount(discount);
         double total = computeTotal(order.getPrice(), order.getQuantity(), order.getDiscount());
@@ -73,9 +73,12 @@ public class OrderService {
         System.out.println(order);
         orderDAO.modifyTableData(order);
     }
-
-
-
+    public void deleteOrder(){
+        System.out.println("===== enter the order id of the order you want to delete =====");
+        String orderId = validateData(Validations.ORDER_ID);
+        System.out.println(orderDAO.getOrderRecord(orderId));
+        orderDAO.deleteOrderOfDb(orderId);
+    }
 
     private String getNewOrderId() {
 
