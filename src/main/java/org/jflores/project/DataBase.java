@@ -109,24 +109,26 @@ public class DataBase {
         }
     }
 
-    public String findIdValue(String name, Tables table) {
+    public String findIdValue(String data, Tables table) {
         String valorId = "";
         String columnLabel = "";
         String query = "";
         String errorMessage = "";
         switch (table) {
             case CUSTOMER:
-                query = "SELECT customer_ID FROM store.customer WHERE cName = '" + name + "'";
+                query = "SELECT customer_ID FROM store.customer WHERE cName = '" + data + "'";
                 columnLabel = "customer_ID";
                 errorMessage = "An error has occurred!\n" +
-                        "customer name: '" + name + "' not found in customer table";
+                        "customer name: '" + data + "' not found in customer table";
                 break;
             case PRODUCT:
-                query = "SELECT product_ID FROM store.product WHERE pName = '" + name + "'";
+                query = "SELECT product_ID FROM store.product WHERE pName = '" + data + "'";
                 columnLabel = "product_ID";
                 errorMessage = "An error has occurred!\n" +
-                        "product name: '" + name + "' not found in product table";
+                        "product name: '" + data + "' not found in product table";
                 break;
+            case ORDER:
+
         }
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -139,9 +141,27 @@ public class DataBase {
             }
 
         } catch (SQLException exception) {
+            System.out.println("there was an error searching for the id value");
             exception.printStackTrace();
         }
         return valorId;
+    }
+
+    public void modifyTableData(Order order) {
+        String query = "UPDATE store.order SET quantity = ?, discount = ?, total = ?, profit = ? WHERE order_ID = '" + order.getOrderId() + "'";
+
+        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+            statement.setInt(1, order.getQuantity());
+            statement.setDouble(2, order.getDiscount());
+            statement.setDouble(3, order.getTotal());
+            statement.setDouble(4, order.getProfit());
+            statement.executeUpdate();
+            System.out.println("the registry was modified successfully!");
+
+        } catch (SQLException exception) {
+            System.out.println("there was an error trying to modify a record");
+            exception.printStackTrace();
+        }
     }
 
     public void addNewOrderToDb(Order order) {
@@ -161,9 +181,10 @@ public class DataBase {
             statement.setDouble(10, order.getProfit());
             statement.executeUpdate();
 
-            System.out.println("order saved successfully");
+            System.out.println("the order saved successfully!");
 
         } catch (SQLException exception) {
+            System.out.println("there was an error trying to add a new order");
             exception.printStackTrace();
         }
 
@@ -181,9 +202,31 @@ public class DataBase {
                 }
             }
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            System.out.println("there was an error checking if the database is empty");
         }
         return true;
+
+    }
+
+    public void getOrderRecord(String id, Order order) {
+        String query = "SELECT * FROM store.order WHERE order_ID = '" + id + "'";
+        try (Statement statement = getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                order.setOrderDate(resultSet.getString("orderDate"));
+                order.setCustomerId(resultSet.getString("customer_ID"));
+                order.setAddressId(resultSet.getInt("address_ID"));
+                order.setProductId(resultSet.getString("product_ID"));
+                order.setPrice(resultSet.getDouble("price"));
+                order.setQuantity(resultSet.getInt("quantity"));
+                order.setDiscount(resultSet.getDouble("discount"));
+                order.setTotal(resultSet.getDouble("total"));
+                order.setProfit(resultSet.getDouble("profit"));
+            }
+        } catch (SQLException exception) {
+            System.out.println("there was an error trying to get an order record");
+        }
+
 
     }
 }

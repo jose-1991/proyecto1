@@ -16,8 +16,7 @@ public class OrderService {
     DataBase dataBase = new DataBase();
     Order order = new Order();
 
-    public void createNewOrder() {
-
+    public void AddNewOrder() {
 
         order.setOrderId(getNewOrderId());
 
@@ -45,15 +44,36 @@ public class OrderService {
         int postalCode = Integer.parseInt(validateData(Validations.POSTAL_CODE));
         order.setAddressId(postalCode);
         order.setOrderDate(getCurrentDate());
+        double total = computeTotal(price, quantity, discount);
+        order.setTotal(total);
+        double profit = computeProfit(total);
+        order.setProfit(profit);
+        System.out.println("total receivable: " + total);
+        System.out.println(order);
+        dataBase.addNewOrderToDb(order);
+    }
+
+    public void modifyOrder() {
+        System.out.println("===== enter the order id of the order you want to modify =====");
+        String orderId = validateData(Validations.ORDER_ID);
+        order.setOrderId(orderId);
+        dataBase.getOrderRecord(orderId, order);
+        System.out.println(order);
+        System.out.println("===== enter the new quantity for this order");
+        int quantity = Integer.parseInt(validateData(Validations.QUANTITY));
+        order.setQuantity(quantity);
+        System.out.println("===== enter the new discount for this order");
+        double discount = Double.parseDouble(validateData(Validations.DISCOUNT));
+        order.setDiscount(discount);
         double total = computeTotal(order.getPrice(), order.getQuantity(), order.getDiscount());
-        double roundedTotal = Math.round(total * 100.0) / 100.0;
-        order.setTotal(roundedTotal);
-        double profit = total * 0.8;
-        double roundedProfit = Math.round(profit * 100.0) / 100.0;
-        order.setProfit(roundedProfit);
-        System.out.println("total receivable: " + roundedTotal);
+        order.setTotal(total);
+        double profit = computeProfit(total);
+        order.setProfit(profit);
 
         System.out.println(order);
+        dataBase.modifyTableData(order);
+        dataBase.getOrderRecord(orderId, order);
+
 
     }
 
@@ -68,6 +88,8 @@ public class OrderService {
         boolean isPrice = false;
         boolean isDiscount = false;
         boolean isPostalCode = false;
+        boolean isOrder = false;
+        boolean isOption = false;
         switch (value) {
             case CUSTOMER:
                 regularExpression = "^[A-Za-z\\s']+$";
@@ -98,6 +120,14 @@ public class OrderService {
                 regularExpression = "^([-])?[0-9]+$";
                 isPostalCode = true;
                 break;
+            case OPTION:
+                regularExpression = "^([-])?[0-9]+$";
+                isOption = true;
+                break;
+            case ORDER_ID:
+                regularExpression = "^(US-)[0-9]{4}([-])?[0-9]{5}$";
+                isOrder = true;
+                break;
 
         }
         while (true) {
@@ -124,7 +154,7 @@ public class OrderService {
                             continue;
                         }
                     }
-                    if (isQuantity || isPrice) {
+                    if (isQuantity || isPrice || isOption) {
                         if (data.equals("0")) {
                             System.out.println("Error! the " + value.toString() + " cannot be 0\n" +
                                     TRY_AGAIN_MESSAGE);
@@ -138,6 +168,13 @@ public class OrderService {
                             continue;
                         }
                     }
+                    if (isOption) {
+                        if (!data.matches("^[12]?")) {
+                            System.out.println("The option entered does not exist\n" +
+                                    TRY_AGAIN_MESSAGE);
+                            continue;
+                        }
+                    }
                     return data;
                 }
                 return data;
@@ -145,15 +182,20 @@ public class OrderService {
                 if (data.isEmpty()) {
                     System.out.println("Error! the " + value.toString() + " entered is empty");
                 }
-                if (data.matches("^[a-zA-Z0-9\\s]+$")) {
-                    System.out.println("Error! " + firstErrorMessage +
-                            "\nplease try again");
-                    continue;
+                if (!isOrder) {
+                    if (data.matches("^[a-zA-Z0-9\\s]+$")) {
+                        System.out.println("Error! " + firstErrorMessage +
+                                "\nplease try again");
+                        continue;
+                    }
                 }
                 if (data.matches("^[\\p{all}]+$")) {
                     System.out.println("Error! the " + value.toString() + " contains invalid characters");
                     if (isPrice || isDiscount) {
                         System.out.println("(use '.' up to 2 decimal places)");
+                    }
+                    if (isOrder) {
+                        System.out.println("use the following format =>  US-####-##### ");
                     }
                 }
 
@@ -162,7 +204,7 @@ public class OrderService {
         }
     }
 
-    public String getNewOrderId() {
+    private String getNewOrderId() {
         StringBuilder number = new StringBuilder();
         String orderId = COUNTRY_US;
         int random = (int) (Math.random() * 100) + 2000;
@@ -177,17 +219,24 @@ public class OrderService {
         return orderId;
     }
 
-    public String getCurrentDate() {
+    private String getCurrentDate() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d/M/yyyy");
         return simpleDateFormat.format(new Date());
     }
 
-    public double computeTotal(double price, int quantity, double discount) {
+    private double computeTotal(double price, int quantity, double discount) {
         double total;
         total = price * quantity;
         if (discount > 0.0) {
             total *= (1 - discount);
         }
+        total = Math.round(total * 100.0) / 100.0;
         return total;
+    }
+
+    private double computeProfit(double total) {
+        double profit = total * 0.8;
+        profit = Math.round(profit * 100.0) / 100.0;
+        return profit;
     }
 }
