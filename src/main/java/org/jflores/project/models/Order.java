@@ -105,23 +105,23 @@ public class Order {
     @Override
     public String toString() {
         return orderId
-                + " | "
+                + " |orderDate= "
                 + orderDate
-                + " | "
+                + " |customerId= "
                 + customerId
-                + " | "
+                + " |addressId= "
                 + addressId
-                + " | "
+                + " |productId "
                 + productId
-                + " | "
+                + " |price= "
                 + price
-                + " | "
+                + " |quantity= "
                 + quantity
-                + " | "
+                + " |discount= "
                 + discount
-                + " | "
+                + " |total= "
                 + total
-                + " | "
+                + " |profit= "
                 + profit
                 + "\n";
     }
