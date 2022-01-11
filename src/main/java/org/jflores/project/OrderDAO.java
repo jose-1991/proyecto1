@@ -150,24 +150,19 @@ public class OrderDAO {
         return idValue;
     }
 
-    public String findAddressId(int value) {
+    public boolean addressIdExists(int value) {
         String query = "SELECT address_ID FROM store.address WHERE address_ID = '" + value + "'";
-        String idValue = "";
+        boolean addressIdExists = false;
+
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            while (resultSet.next()) {
-                idValue = String.valueOf(resultSet.getInt("address_ID"));
-            }
-            if (idValue.isEmpty()) {
-                throw new IdValueNotFoundException("An error has occurred!\n" +
-                        "addressId: '" + value + "' not found in address table");
-            }
-
+            addressIdExists = resultSet.next();
         } catch (SQLException e) {
             System.out.println("there was an error searching for the id value");
             e.printStackTrace();
         }
-        return idValue;
+
+        return addressIdExists;
     }
 
     public void modifyTableData(Order order) {

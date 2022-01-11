@@ -4,10 +4,11 @@ import java.util.Scanner;
 
 public class ValidationHelper {
     public static final int MAX_VALUE_POSTAL_CODE = 100000;
-    public final static String TRY_AGAIN_MESSAGE = "please try again";
+    public static final String TRY_AGAIN_MESSAGE = "Please try again";
     public static final String ONLY_LETTERS = "^[A-Za-z\\s']+$";
+    public static final int MAX_OPTIONS = 3;
 
-    static Scanner scanner = new Scanner(System.in);
+    public static Scanner scanner = new Scanner(System.in);
 
     public static String validateIsNotEmpty(String value) {
         while (true) {
@@ -37,6 +38,7 @@ public class ValidationHelper {
     public static int validateIsPositiveInteger(String value) {
         int number;
         while (true) {
+
             try {
                 value = validateIsNotEmpty(value);
                 number = Integer.parseInt(value);
@@ -51,9 +53,7 @@ public class ValidationHelper {
                 System.out.println("Error! you must enter only numbers\n" +
                         TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
-
             }
-
         }
     }
 
@@ -64,6 +64,7 @@ public class ValidationHelper {
     public static double validatePositiveDecimal(String value) {
         double number;
         while (true) {
+
             try {
                 value = validateIsNotEmpty(value);
                 number = Double.parseDouble(value);
@@ -78,7 +79,6 @@ public class ValidationHelper {
                 System.out.println("Error! the data is invalid (use '.' for decimal)\n" +
                         TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
-
             }
         }
     }
@@ -93,6 +93,20 @@ public class ValidationHelper {
                 System.out.println("Error! the discount is out to range (from 0.0 to 0.9)\n" +
                         TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
+            }
+        }
+    }
+
+    public static int validateOption(String value) {
+        int number;
+        while (true) {
+            number = validateIsPositiveInteger(value);
+            if (number > MAX_OPTIONS) {
+                System.out.println("Error! the option entered does not exist\n" +
+                        TRY_AGAIN_MESSAGE);
+                value = scanner.nextLine();
+            } else {
+                return number;
             }
         }
     }
