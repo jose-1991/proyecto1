@@ -23,12 +23,13 @@ public class ValidationHelper {
 
     public static String validateOnlyLetters(String value) {
         while (true) {
+            value = validateIsNotEmpty(value);
             if (value.matches(ONLY_LETTERS)) {
                 return value;
             } else {
                 System.out.println("Error! the data entered must be only letters\n" +
                         TRY_AGAIN_MESSAGE);
-                value = validateIsNotEmpty(scanner.nextLine());
+                value = scanner.nextLine();
             }
         }
     }
@@ -37,18 +38,20 @@ public class ValidationHelper {
         int number;
         while (true) {
             try {
+                value = validateIsNotEmpty(value);
                 number = Integer.parseInt(value);
                 if (number > 0 && IsLessThanSixDigits(number)) {
                     return number;
                 } else {
                     System.out.println("Error! the number entered must be positive and up to 5 digits\n" +
                             TRY_AGAIN_MESSAGE);
-                    value = validateIsNotEmpty(scanner.nextLine());
+                    value = scanner.nextLine();
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Error! you must enter only numbers\n" +
                         TRY_AGAIN_MESSAGE);
-                value = validateIsNotEmpty(scanner.nextLine());
+                value = scanner.nextLine();
+
             }
 
         }
@@ -62,31 +65,34 @@ public class ValidationHelper {
         double number;
         while (true) {
             try {
+                value = validateIsNotEmpty(value);
                 number = Double.parseDouble(value);
                 if (number < 0) {
                     System.out.println("Error! the number entered must be positive\n" +
                             TRY_AGAIN_MESSAGE);
-                    value = validateIsNotEmpty(scanner.nextLine());
+                    value = scanner.nextLine();
                 } else {
                     return Math.round(number * 100.0) / 100.0;
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Error! the data is invalid (use '.' for decimal)\n" +
                         TRY_AGAIN_MESSAGE);
-                value = validateIsNotEmpty(scanner.nextLine());
+                value = scanner.nextLine();
+
             }
         }
-
     }
 
-    public static double validatePercentage(double value) {
+    public static double validatePercentage(String value) {
+        double number;
         while (true) {
-            if (value < 1) {
-                return value;
+            number = validatePositiveDecimal(value);
+            if (number < 1) {
+                return number;
             } else {
                 System.out.println("Error! the discount is out to range (from 0.0 to 0.9)\n" +
                         TRY_AGAIN_MESSAGE);
-                value = validatePositiveDecimal(validateIsNotEmpty(scanner.nextLine()));
+                value = scanner.nextLine();
             }
         }
     }

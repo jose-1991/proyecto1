@@ -23,23 +23,23 @@ public class OrderService {
         order.setOrderId(getNewOrderId());
         order.setOrderDate(getCurrentDate());
         System.out.println("===== enter the customer's first and last name =====");
-        String customerName = validateOnlyLetters(validateIsNotEmpty(scanner.nextLine()));
+        String customerName = validateOnlyLetters(scanner.nextLine());
         order.setCustomerId(findIdValue(customerName, Tables.CUSTOMER));
         System.out.println("===== enter product name =====");
         String productName = validateIsNotEmpty(scanner.nextLine());
         order.setProductId(findIdValue(productName, Tables.PRODUCT));
         System.out.println("===== enter product quantity =====");
-        int quantity = validateIsPositiveInteger(validateIsNotEmpty(scanner.nextLine()));
+        int quantity = validateIsPositiveInteger(scanner.nextLine());
         order.setQuantity(quantity);
         System.out.println("===== enter product price (use '.' for decimal) =====");
-        double price = validatePositiveDecimal(validateIsNotEmpty(scanner.nextLine()));
+        double price = validatePositiveDecimal(scanner.nextLine());
         order.setPrice(price);
         System.out.println("===== enter product discount (use '.' for 2 decimal) (range 0.0 to 0.9)  =====");
-        double discount = validatePercentage(validatePositiveDecimal(validateIsNotEmpty(scanner.nextLine())));
+        double discount = validatePercentage(scanner.nextLine());
         order.setDiscount(discount);
         System.out.println("===== enter Postal code   (up to 5 digits)  =====");
-        int postalCode = validateIsPositiveInteger(validateIsNotEmpty(scanner.nextLine()));
-        order.setAddressId(postalCode);
+        String postalCode = findIdValue(scanner.nextLine(), Tables.ADDRESS);
+        order.setAddressId(Integer.parseInt(postalCode));
         double total = computeTotal(price, quantity, discount);
         order.setTotal(total);
         order.setProfit(computeProfit(total));
@@ -62,13 +62,24 @@ public class OrderService {
         return simpleDateFormat.format(new Date());
     }
 
-    public String findIdValue(String value, Tables table) {
+    private String findIdValue(String value, Tables table) {
+        int number;
         while (true) {
             try {
-                return orderDAO.findIdValue(value, table);
+                if (table.equals(Tables.ADDRESS)) {
+                    number = validateIsPositiveInteger(value);
+                    return orderDAO.findAddressId(number);
+                } else if (table.equals(Tables.CUSTOMER)) {
+                    value = validateOnlyLetters(value);
+                    return orderDAO.findIdValue(value, table);
+                } else {
+                    value = validateIsNotEmpty(value);
+                    return orderDAO.findIdValue(value, table);
+                }
+
             } catch (IdValueNotFoundException e) {
                 System.out.println("please try again");
-                value = validateIsNotEmpty(scanner.nextLine());
+                value = scanner.nextLine();
             }
         }
     }
@@ -89,14 +100,14 @@ public class OrderService {
 
     public void modifyOrder() {
         System.out.println("===== enter the order id of the order you want to modify =====");
-        String orderId = findIdValue(validateIsNotEmpty(scanner.nextLine()), Tables.ORDER);
+        String orderId = findIdValue(scanner.nextLine(), Tables.ORDER);
         Order order = orderDAO.getOrderRecord(orderId);
         System.out.println(order);
         System.out.println("===== enter the new quantity for this order =====");
-        int quantity = validateIsPositiveInteger(validateIsNotEmpty(scanner.nextLine()));
+        int quantity = validateIsPositiveInteger(scanner.nextLine());
         order.setQuantity(quantity);
         System.out.println("===== enter the new discount for this order =====");
-        double discount = validatePercentage(validatePositiveDecimal(validateIsNotEmpty(scanner.nextLine())));
+        double discount = validatePercentage(scanner.nextLine());
         order.setDiscount(discount);
         double total = computeTotal(order.getPrice(), order.getQuantity(), order.getDiscount());
         order.setTotal(total);
@@ -108,7 +119,7 @@ public class OrderService {
 
     public void deleteOrder() {
         System.out.println("===== enter the order id of the order you want to delete =====");
-        String orderId = findIdValue(validateIsNotEmpty(scanner.nextLine()), Tables.ORDER);
+        String orderId = findIdValue(scanner.nextLine(), Tables.ORDER);
         System.out.println(orderDAO.getOrderRecord(orderId));
         orderDAO.deleteOrderOfDb(orderId);
     }

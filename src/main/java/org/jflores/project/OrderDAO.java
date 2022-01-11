@@ -110,7 +110,7 @@ public class OrderDAO {
     }
 
     public String findIdValue(String data, Tables table) {
-        String valorId = "";
+        String idValue = "";
         String columnLabel = "";
         String query = "";
         String errorMessage = "";
@@ -133,14 +133,13 @@ public class OrderDAO {
                 errorMessage = "An error has occurred!\n" +
                         "orderId: '" + data + "' not found in order table";
                 break;
-
         }
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
-                valorId = resultSet.getString(columnLabel);
+                idValue = resultSet.getString(columnLabel);
             }
-            if (valorId.isEmpty()) {
+            if (idValue.isEmpty()) {
                 throw new IdValueNotFoundException(errorMessage);
             }
 
@@ -148,7 +147,27 @@ public class OrderDAO {
             System.out.println("there was an error searching for the id value");
             exception.printStackTrace();
         }
-        return valorId;
+        return idValue;
+    }
+
+    public String findAddressId(int value) {
+        String query = "SELECT address_ID FROM store.address WHERE address_ID = '" + value + "'";
+        String idValue = "";
+        try (Statement statement = getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                idValue = String.valueOf(resultSet.getInt("address_ID"));
+            }
+            if (idValue.isEmpty()) {
+                throw new IdValueNotFoundException("An error has occurred!\n" +
+                        "addressId: '" + value + "' not found in address table");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("there was an error searching for the id value");
+            e.printStackTrace();
+        }
+        return idValue;
     }
 
     public void modifyTableData(Order order) {
