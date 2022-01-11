@@ -128,6 +128,11 @@ public class OrderDAO {
                         "product name: '" + data + "' not found in product table";
                 break;
             case ORDER:
+                query = "SELECT order_ID FROM store.order WHERE order_ID = '" + data + "'";
+                columnLabel = "order_ID";
+                errorMessage = "An error has occurred!\n" +
+                        "orderId: '" + data + "' not found in order table";
+                break;
 
         }
         try (Statement statement = getConnection().createStatement();
@@ -137,7 +142,6 @@ public class OrderDAO {
             }
             if (valorId.isEmpty()) {
                 throw new IdValueNotFoundException(errorMessage);
-
             }
 
         } catch (SQLException exception) {
@@ -225,6 +229,7 @@ public class OrderDAO {
                 order.setTotal(resultSet.getDouble("total"));
                 order.setProfit(resultSet.getDouble("profit"));
             }
+
         } catch (SQLException exception) {
             System.out.println("there was an error trying to get an order record");
         }
@@ -232,7 +237,8 @@ public class OrderDAO {
 
 
     }
-    public void deleteOrderOfDb(String orderId){
+
+    public void deleteOrderOfDb(String orderId) {
         try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM store.order WHERE order_ID =?")) {
             stmt.setString(1, orderId);
             stmt.executeUpdate();
