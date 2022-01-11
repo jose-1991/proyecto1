@@ -111,7 +111,7 @@ public class Order {
                 + customerId
                 + " |addressId= "
                 + addressId
-                + " |productId "
+                + " |productId= "
                 + productId
                 + " |price= "
                 + price

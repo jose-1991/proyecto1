@@ -1,7 +1,6 @@
 package org.jflores.project;
 
-import org.jflores.project.models.Order;
-import org.jflores.project.models.Validations;
+import static org.jflores.project.ValidationHelper.*;
 
 public class UserStore {
 
@@ -13,7 +12,7 @@ public class UserStore {
                 " 2) Modify an order\n" +
                 " 3) Delete an order");
 
-        int option = Integer.parseInt(ValidationHelper.validateData(Validations.OPTION));
+        int option = validateOption(scanner.nextLine());
         switch (option) {
             case 1:
                 orderService.addNewOrder();
@@ -23,6 +22,7 @@ public class UserStore {
                 break;
             case 3:
                 orderService.deleteOrder();
+                break;
         }
     }
 }

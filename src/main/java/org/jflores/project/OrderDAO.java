@@ -110,7 +110,7 @@ public class OrderDAO {
     }
 
     public String findIdValue(String data, Tables table) {
-        String valorId = "";
+        String idValue = "";
         String columnLabel = "";
         String query = "";
         String errorMessage = "";
@@ -128,23 +128,41 @@ public class OrderDAO {
                         "product name: '" + data + "' not found in product table";
                 break;
             case ORDER:
-
+                query = "SELECT order_ID FROM store.order WHERE order_ID = '" + data + "'";
+                columnLabel = "order_ID";
+                errorMessage = "An error has occurred!\n" +
+                        "orderId: '" + data + "' not found in order table";
+                break;
         }
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
-                valorId = resultSet.getString(columnLabel);
+                idValue = resultSet.getString(columnLabel);
             }
-            if (valorId.isEmpty()) {
+            if (idValue.isEmpty()) {
                 throw new IdValueNotFoundException(errorMessage);
-
             }
 
         } catch (SQLException exception) {
             System.out.println("there was an error searching for the id value");
             exception.printStackTrace();
         }
-        return valorId;
+        return idValue;
+    }
+
+    public boolean addressIdExists(int value) {
+        String query = "SELECT address_ID FROM store.address WHERE address_ID = '" + value + "'";
+        boolean addressIdExists = false;
+
+        try (Statement statement = getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            addressIdExists = resultSet.next();
+        } catch (SQLException e) {
+            System.out.println("there was an error searching for the id value");
+            e.printStackTrace();
+        }
+
+        return addressIdExists;
     }
 
     public void modifyTableData(Order order) {
@@ -225,6 +243,7 @@ public class OrderDAO {
                 order.setTotal(resultSet.getDouble("total"));
                 order.setProfit(resultSet.getDouble("profit"));
             }
+
         } catch (SQLException exception) {
             System.out.println("there was an error trying to get an order record");
         }
@@ -232,7 +251,8 @@ public class OrderDAO {
 
 
     }
-    public void deleteOrderOfDb(String orderId){
+
+    public void deleteOrderOfDb(String orderId) {
         try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM store.order WHERE order_ID =?")) {
             stmt.setString(1, orderId);
             stmt.executeUpdate();
