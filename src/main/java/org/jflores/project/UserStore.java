@@ -6,11 +6,14 @@ public class UserStore {
 
     public static void main(String[] args) {
         OrderService orderService = new OrderService();
+        ReportService reportService = new ReportService();
+
         System.out.println("============================  MENU  =========================\n" +
                 "-------- Select one of the following options ----------\n\n" +
                 " 1) Enter a new order\n" +
                 " 2) Modify an order\n" +
-                " 3) Delete an order");
+                " 3) Delete an order\n"+
+                " 4) Generate daily report");
 
         int option = validateOption(scanner.nextLine());
         switch (option) {
@@ -22,6 +25,9 @@ public class UserStore {
                 break;
             case 3:
                 orderService.deleteOrder();
+                break;
+            case 4:
+                reportService.generateDailyReport();
                 break;
         }
     }
