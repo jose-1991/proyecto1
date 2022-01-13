@@ -123,7 +123,6 @@ public class ValidationHelper {
             try {
                 Date date = simpleDateFormat.parse(value);
                 return simpleDateFormat.format(date);
-
             } catch (ParseException e) {
                 System.out.println("Error! the date entered does not exist\n" +TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();

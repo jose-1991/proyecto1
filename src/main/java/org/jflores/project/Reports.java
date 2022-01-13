@@ -13,8 +13,9 @@ public class Reports {
         System.out.println("===== Enter the date for the report   (day/month/year) =====");
         String date = validateDate(scanner.nextLine());
         List<Double> totalSales = findDailyTotalSales(date);
-        double dailyTotal = computeTotal(totalSales);
+
         System.out.println("============== Date: " + date + " ==============");
+        double dailyTotal = computeTotal(totalSales);
         System.out.println("Total Sales = " + dailyTotal);
     }
 
@@ -28,6 +29,7 @@ public class Reports {
 
     private List<Double> findDailyTotalSales(String date){
         while (true) {
+
             try {
                return reportsDAO.findDailyTotalSalesInDb(date);
 

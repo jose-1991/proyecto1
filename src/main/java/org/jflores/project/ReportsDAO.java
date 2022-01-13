@@ -19,6 +19,7 @@ public class ReportsDAO {
         double total;
         List<Double> totalSales = new ArrayList<>();
         String query = "SELECT total FROM store.order WHERE orderDate = '" + date + "'";
+
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
