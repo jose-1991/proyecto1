@@ -6,7 +6,7 @@ public class UserStore {
 
     public static void main(String[] args) {
         OrderService orderService = new OrderService();
-        Reports reports = new Reports();
+        ReportService reportService = new ReportService();
 
         System.out.println("============================  MENU  =========================\n" +
                 "-------- Select one of the following options ----------\n\n" +
@@ -27,7 +27,7 @@ public class UserStore {
                 orderService.deleteOrder();
                 break;
             case 4:
-                reports.generateDailyReport();
+                reportService.generateDailyReport();
                 break;
         }
     }

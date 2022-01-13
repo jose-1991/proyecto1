@@ -6,11 +6,11 @@ import java.util.List;
 
 import static org.jflores.project.ValidationHelper.*;
 
-public class Reports {
+public class ReportService {
     ReportsDAO reportsDAO = new ReportsDAO();
 
     public void generateDailyReport() {
-        System.out.println("===== Enter the date for the report   (day/month/year) =====");
+        System.out.println("===== Enter the date for the report   (dd/mm/yyyy) =====");
         String date = validateDate(scanner.nextLine());
         List<Double> totalSales = findDailyTotalSales(date);
 
