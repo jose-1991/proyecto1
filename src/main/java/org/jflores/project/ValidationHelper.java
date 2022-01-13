@@ -1,14 +1,19 @@
 package org.jflores.project;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class ValidationHelper {
     public static final int MAX_VALUE_POSTAL_CODE = 100000;
     public static final String TRY_AGAIN_MESSAGE = "Please try again";
     public static final String ONLY_LETTERS = "^[A-Za-z\\s']+$";
-    public static final int MAX_OPTIONS = 3;
+    public static final int MAX_OPTIONS = 4;
+    public static final String DATE_FORMAT = "^(\\d{1,2})(/)(\\d{1,2})(/)(\\d{4})$";
 
     public static Scanner scanner = new Scanner(System.in);
+    static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d/M/yyyy");
 
     public static String validateIsNotEmpty(String value) {
         while (true) {
@@ -102,11 +107,38 @@ public class ValidationHelper {
         while (true) {
             number = validateIsPositiveInteger(value);
             if (number > MAX_OPTIONS) {
-                System.out.println("Error! the option entered does not exist\n" +
-                        TRY_AGAIN_MESSAGE);
+                System.out.println("Error! the option entered does not exist" + TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
             } else {
                 return number;
+            }
+        }
+    }
+
+    public static String validateDate(String value) {
+        while (true) {
+            value = validateDateFormat(value);
+            simpleDateFormat.setLenient(false);
+
+            try {
+                Date date = simpleDateFormat.parse(value);
+                return simpleDateFormat.format(date);
+
+            } catch (ParseException e) {
+                System.out.println("Error! the date entered does not exist\n" +TRY_AGAIN_MESSAGE);
+                value = scanner.nextLine();
+            }
+        }
+    }
+
+    private static String validateDateFormat(String value) {
+        while (true) {
+            value = validateIsNotEmpty(value);
+            if (value.matches(DATE_FORMAT)) {
+                return value;
+            } else {
+                System.out.println("Error! the format must be: dd/mm/yyyy\n" + TRY_AGAIN_MESSAGE);
+                value = scanner.nextLine();
             }
         }
     }
