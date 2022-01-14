@@ -9,8 +9,9 @@ public class ValidationHelper {
     public static final int MAX_VALUE_POSTAL_CODE = 100000;
     public static final String TRY_AGAIN_MESSAGE = "Please try again";
     public static final String ONLY_LETTERS = "^[A-Za-z\\s']+$";
-    public static final int MAX_OPTIONS = 4;
+    public static final int MAX_OPTIONS = 5;
     public static final String DATE_FORMAT = "^(\\d{1,2})(/)(\\d{1,2})(/)(\\d{4})$";
+    public static final String YEAR_RANGE = "^20[0-5][0-9]$";
 
     public static Scanner scanner = new Scanner(System.in);
     static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d/M/yyyy");
@@ -137,6 +138,17 @@ public class ValidationHelper {
                 return value;
             } else {
                 System.out.println("Error! the format must be: dd/mm/yyyy\n" + TRY_AGAIN_MESSAGE);
+                value = scanner.nextLine();
+            }
+        }
+    }
+    public static String validateYear(String value){
+        while (true){
+            value = validateIsNotEmpty(value);
+            if (value.matches(YEAR_RANGE)) {
+                return value;
+            }else {
+                System.out.println("Error! the year must be between 2000 - 2040\n" + TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
             }
         }
