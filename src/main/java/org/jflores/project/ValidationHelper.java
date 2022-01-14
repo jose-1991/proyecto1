@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class ValidationHelper {
-    public static final int MAX_VALUE_POSTAL_CODE = 100000;
+    public static final int MAX_VALUE_POSTAL_CODE = 99999;
     public static final String TRY_AGAIN_MESSAGE = "Please try again";
     public static final String ONLY_LETTERS = "^[A-Za-z\\s']+$";
     public static final int MAX_OPTIONS = 5;
@@ -41,49 +41,23 @@ public class ValidationHelper {
         }
     }
 
-    private static int validateIsPositiveInteger(String value) {
+    public static int validateIsPositiveInteger(String value, int max) {
         int number;
         while (true) {
 
             try {
                 value = validateIsNotEmpty(value);
                 number = Integer.parseInt(value);
-                if (number > 0) {
+                if (number > 0 && number <= max) {
                     return number;
                 } else {
-                    System.out.println("Error! the number entered must be positive\n" +
-                            TRY_AGAIN_MESSAGE);
+                    System.out.println("Error! the number entered must be positive and not greater than: " + max +
+                            "\n" + TRY_AGAIN_MESSAGE);
                     value = scanner.nextLine();
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Error! you must enter only numbers\n" +
                         TRY_AGAIN_MESSAGE);
-                value = scanner.nextLine();
-            }
-        }
-    }
-
-    public static int validateQuantity(String value, int max) {
-        int quantity;
-        while (true) {
-            quantity = validateIsPositiveInteger(value);
-            if (quantity <= max) {
-                return quantity;
-            } else {
-                System.out.println("The quantity must be up to 100 units");
-                value = scanner.nextLine();
-            }
-        }
-    }
-
-    public static int validatePostalCode(String value, int max) {
-        int postalCode;
-        while (true) {
-            postalCode = validateIsPositiveInteger(value);
-            if (postalCode < max) {
-                return postalCode;
-            } else {
-                System.out.println("Error! the number entered must have up to 5 digits");
                 value = scanner.nextLine();
             }
         }
@@ -128,7 +102,7 @@ public class ValidationHelper {
     public static int validateOption(String value) {
         int number;
         while (true) {
-            number = validateIsPositiveInteger(value);
+            number = validateIsPositiveInteger(value, MAX_OPTIONS);
             if (number > MAX_OPTIONS) {
                 System.out.println("Error! the option entered does not exist" + TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
@@ -168,8 +142,8 @@ public class ValidationHelper {
     public static String validateYear(String value, int currentYear) {
         int year;
         while (true) {
-            year = validateIsPositiveInteger(value);
-            if (year >= MIN_YEAR && year <= currentYear) {
+            year = validateIsPositiveInteger(value, currentYear);
+            if (year >= MIN_YEAR) {
                 return value;
             } else {
                 System.out.println("Error! the year must be between " + MIN_YEAR + " - " + currentYear + "\n" + TRY_AGAIN_MESSAGE);
@@ -177,5 +151,4 @@ public class ValidationHelper {
             }
         }
     }
-
 }
