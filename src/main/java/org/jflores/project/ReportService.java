@@ -2,6 +2,7 @@ package org.jflores.project;
 
 import org.jflores.project.exceptions.RecordsNotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.jflores.project.ValidationHelper.*;
@@ -21,7 +22,7 @@ public class ReportService {
 
     public void generateTopTenProductPerYear() {
         System.out.println("====== Enter the year =====");
-        String year = validateYear(scanner.nextLine());
+        String year = validateYear(scanner.nextLine(),getCurrentYear());
         List<String> topTenProducts = findTopTenProducts(year);
 
         System.out.println("============= Top 10 product in year: " + year + " =============\n");
@@ -36,7 +37,7 @@ public class ReportService {
                 return reportsDAO.findTopTenProductPerYearInDb(year);
             } catch (RecordsNotFoundException e) {
                 System.out.println(TRY_AGAIN_MESSAGE);
-                year = validateYear(scanner.nextLine());
+                year = validateYear(scanner.nextLine(),getCurrentYear());
             }
         }
     }
@@ -60,5 +61,9 @@ public class ReportService {
                 date = validateDate(scanner.nextLine());
             }
         }
+    }
+    private int getCurrentYear(){
+        LocalDate date = LocalDate.now();
+        return date.getYear();
     }
 }

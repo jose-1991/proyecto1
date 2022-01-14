@@ -41,7 +41,7 @@ public class ReportsDAO {
         String productName;
         int quantity;
         int id = 0;
-        String query = "SELECT p.pName, sum(quantity) as totalQuantity FROM store.order as o INNER JOIN  product AS p on o.product_ID = p.product_ID \n" +
+        String query = "SELECT p.pName, sum(quantity) as totalQuantity FROM store.order AS o INNER JOIN  product AS p on o.product_ID = p.product_ID \n" +
                 "WHERE orderDate LIKE '%" + year + "%' GROUP BY p.pName ORDER BY SUM(quantity) DESC LIMIT 0,10";
 
         try (Statement statement = getConnection().createStatement();
@@ -54,7 +54,6 @@ public class ReportsDAO {
             if (productsPerYear.isEmpty()) {
                 throw new RecordsNotFoundException("no records was found on year: " + year);
             }
-
         } catch (SQLException e) {
             System.out.println("there was an error when trying to find the best-selling products per year");
             e.printStackTrace();

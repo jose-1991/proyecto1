@@ -11,7 +11,7 @@ public class ValidationHelper {
     public static final String ONLY_LETTERS = "^[A-Za-z\\s']+$";
     public static final int MAX_OPTIONS = 5;
     public static final String DATE_FORMAT = "^(\\d{1,2})(/)(\\d{1,2})(/)(\\d{4})$";
-    public static final String YEAR_RANGE = "^20[0-5][0-9]$";
+    public static final int MIN_YEAR = 2014;
 
     public static Scanner scanner = new Scanner(System.in);
     static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d/M/yyyy");
@@ -41,17 +41,17 @@ public class ValidationHelper {
         }
     }
 
-    public static int validateIsPositiveInteger(String value) {
+    private static int validateIsPositiveInteger(String value) {
         int number;
         while (true) {
 
             try {
                 value = validateIsNotEmpty(value);
                 number = Integer.parseInt(value);
-                if (number > 0 && IsLessThanSixDigits(number)) {
+                if (number > 0) {
                     return number;
                 } else {
-                    System.out.println("Error! the number entered must be positive and up to 5 digits\n" +
+                    System.out.println("Error! the number entered must be positive\n" +
                             TRY_AGAIN_MESSAGE);
                     value = scanner.nextLine();
                 }
@@ -63,8 +63,30 @@ public class ValidationHelper {
         }
     }
 
-    private static boolean IsLessThanSixDigits(int number) {
-        return number < MAX_VALUE_POSTAL_CODE;
+    public static int validateQuantity(String value, int max) {
+        int quantity;
+        while (true) {
+            quantity = validateIsPositiveInteger(value);
+            if (quantity <= max) {
+                return quantity;
+            } else {
+                System.out.println("The quantity must be up to 100 units");
+                value = scanner.nextLine();
+            }
+        }
+    }
+
+    public static int validatePostalCode(String value, int max) {
+        int postalCode;
+        while (true) {
+            postalCode = validateIsPositiveInteger(value);
+            if (postalCode < max) {
+                return postalCode;
+            } else {
+                System.out.println("Error! the number entered must have up to 5 digits");
+                value = scanner.nextLine();
+            }
+        }
     }
 
     public static double validatePositiveDecimal(String value) {
@@ -125,7 +147,7 @@ public class ValidationHelper {
                 Date date = simpleDateFormat.parse(value);
                 return simpleDateFormat.format(date);
             } catch (ParseException e) {
-                System.out.println("Error! the date entered does not exist\n" +TRY_AGAIN_MESSAGE);
+                System.out.println("Error! the date entered does not exist\n" + TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
             }
         }
@@ -142,15 +164,18 @@ public class ValidationHelper {
             }
         }
     }
-    public static String validateYear(String value){
-        while (true){
-            value = validateIsNotEmpty(value);
-            if (value.matches(YEAR_RANGE)) {
+
+    public static String validateYear(String value, int currentYear) {
+        int year;
+        while (true) {
+            year = validateIsPositiveInteger(value);
+            if (year >= MIN_YEAR && year <= currentYear) {
                 return value;
-            }else {
-                System.out.println("Error! the year must be between 2000 - 2040\n" + TRY_AGAIN_MESSAGE);
+            } else {
+                System.out.println("Error! the year must be between " + MIN_YEAR + " - " + currentYear + "\n" + TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
             }
         }
     }
+
 }
