@@ -22,7 +22,7 @@ public class ReportService {
 
     public void generateTopTenProductPerYear() {
         System.out.println("====== Enter the year =====");
-        String year = validateYear(scanner.nextLine(),getCurrentYear());
+        int year = validateIsPositiveInteger(scanner.nextLine(), MIN_YEAR, getCurrentYear());
         List<String> topTenProducts = findTopTenProducts(year);
 
         System.out.println("============= Top 10 product in year: " + year + " =============\n");
@@ -30,14 +30,14 @@ public class ReportService {
 
     }
 
-    private List<String> findTopTenProducts(String year) {
+    private List<String> findTopTenProducts(int year) {
         while (true) {
 
             try {
-                return reportsDAO.findTopTenProductPerYearInDb(year);
+                return reportsDAO.findTopTenProductPerYearInDb(String.valueOf(year));
             } catch (RecordsNotFoundException e) {
                 System.out.println(TRY_AGAIN_MESSAGE);
-                year = validateYear(scanner.nextLine(),getCurrentYear());
+                year = validateIsPositiveInteger(scanner.nextLine(), MIN_YEAR, getCurrentYear());
             }
         }
     }
@@ -62,7 +62,8 @@ public class ReportService {
             }
         }
     }
-    private int getCurrentYear(){
+
+    private int getCurrentYear() {
         LocalDate date = LocalDate.now();
         return date.getYear();
     }

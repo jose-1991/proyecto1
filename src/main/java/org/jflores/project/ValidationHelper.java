@@ -12,6 +12,7 @@ public class ValidationHelper {
     public static final int MAX_OPTIONS = 5;
     public static final String DATE_FORMAT = "^(\\d{1,2})(/)(\\d{1,2})(/)(\\d{4})$";
     public static final int MIN_YEAR = 2014;
+    public static final int MIN_VALUE_INTEGER = 1;
 
     public static Scanner scanner = new Scanner(System.in);
     static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d/M/yyyy");
@@ -41,17 +42,17 @@ public class ValidationHelper {
         }
     }
 
-    public static int validateIsPositiveInteger(String value, int max) {
+    public static int validateIsPositiveInteger(String value, int min, int max) {
         int number;
         while (true) {
 
             try {
                 value = validateIsNotEmpty(value);
                 number = Integer.parseInt(value);
-                if (number > 0 && number <= max) {
+                if (number >= min && number <= max) {
                     return number;
                 } else {
-                    System.out.println("Error! the number entered must be positive and not greater than: " + max +
+                    System.out.println("Error! the number entered must be positive and must be between " + min + " to " + max +
                             "\n" + TRY_AGAIN_MESSAGE);
                     value = scanner.nextLine();
                 }
@@ -102,7 +103,7 @@ public class ValidationHelper {
     public static int validateOption(String value) {
         int number;
         while (true) {
-            number = validateIsPositiveInteger(value, MAX_OPTIONS);
+            number = validateIsPositiveInteger(value, MIN_VALUE_INTEGER, MAX_OPTIONS);
             if (number > MAX_OPTIONS) {
                 System.out.println("Error! the option entered does not exist" + TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
@@ -134,19 +135,6 @@ public class ValidationHelper {
                 return value;
             } else {
                 System.out.println("Error! the format must be: dd/mm/yyyy\n" + TRY_AGAIN_MESSAGE);
-                value = scanner.nextLine();
-            }
-        }
-    }
-
-    public static String validateYear(String value, int currentYear) {
-        int year;
-        while (true) {
-            year = validateIsPositiveInteger(value, currentYear);
-            if (year >= MIN_YEAR) {
-                return value;
-            } else {
-                System.out.println("Error! the year must be between " + MIN_YEAR + " - " + currentYear + "\n" + TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
             }
         }
