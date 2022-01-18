@@ -36,7 +36,7 @@ public class OrderService {
 
         System.out.println("===== Enter product quantity =====");
 
-        int quantity = validateIsPositiveInteger(scanner.nextLine(),0, MAX_QUANTITY_PRODUCT);
+        int quantity = validateIsPositiveInteger(scanner.nextLine(), 0, MAX_QUANTITY_PRODUCT);
         order.setQuantity(quantity);
 
         System.out.println("===== Enter product price (use '.' for decimal) =====");
@@ -63,7 +63,7 @@ public class OrderService {
     private int findAddressId(String value) {
         int addressId;
         while (true) {
-            addressId = validateIsPositiveInteger(value,MIN_VALUE_INTEGER, MAX_VALUE_POSTAL_CODE);
+            addressId = validateIsPositiveInteger(value, MIN_VALUE_INTEGER, MAX_VALUE_POSTAL_CODE);
             if (orderDAO.addressIdExists(addressId)) {
                 return addressId;
             } else {
@@ -123,7 +123,7 @@ public class OrderService {
         System.out.println(order);
 
         System.out.println("===== Enter the new quantity for this order =====");
-        int quantity = validateIsPositiveInteger(scanner.nextLine(),MIN_VALUE_INTEGER, MAX_QUANTITY_PRODUCT);
+        int quantity = validateIsPositiveInteger(scanner.nextLine(), MIN_VALUE_INTEGER, MAX_QUANTITY_PRODUCT);
         order.setQuantity(quantity);
 
         System.out.println("===== Enter the new discount for this order =====");

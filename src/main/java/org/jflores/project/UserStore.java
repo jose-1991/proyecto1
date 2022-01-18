@@ -1,7 +1,6 @@
 package org.jflores.project;
 
-import static org.jflores.project.ValidationHelper.scanner;
-import static org.jflores.project.ValidationHelper.validateOption;
+import static org.jflores.project.ValidationHelper.*;
 
 public class UserStore {
 
@@ -17,7 +16,7 @@ public class UserStore {
                 " 4) Generate daily report\n" +
                 " 5) Generate report of the top ten products per year");
 
-        int option = validateOption(scanner.nextLine());
+        int option = validateIsPositiveInteger(scanner.nextLine(),MIN_VALUE_INTEGER,MAX_OPTIONS);
         switch (option) {
             case 1:
                 orderService.addNewOrder();

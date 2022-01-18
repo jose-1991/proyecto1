@@ -100,19 +100,6 @@ public class ValidationHelper {
         }
     }
 
-    public static int validateOption(String value) {
-        int number;
-        while (true) {
-            number = validateIsPositiveInteger(value, MIN_VALUE_INTEGER, MAX_OPTIONS);
-            if (number > MAX_OPTIONS) {
-                System.out.println("Error! the option entered does not exist" + TRY_AGAIN_MESSAGE);
-                value = scanner.nextLine();
-            } else {
-                return number;
-            }
-        }
-    }
-
     public static String validateDate(String value) {
         while (true) {
             value = validateDateFormat(value);
