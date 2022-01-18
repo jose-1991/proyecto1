@@ -27,12 +27,37 @@ public class ReportsDAO {
                 totalSales.add(total);
             }
             if (totalSales.isEmpty()) {
-                throw new RecordsNotFoundException("no record was found on date: " + date);
+                throw new RecordsNotFoundException("no records was found on date: " + date);
             }
         } catch (SQLException e) {
             System.out.println("there was an error searching for the total sales");
             e.printStackTrace();
         }
         return totalSales;
+    }
+
+    public List<String> findTopTenProductPerYearInDb(String year) {
+        List<String> productsPerYear = new ArrayList<>();
+        String productName;
+        int quantity;
+        int id = 0;
+        String query = "SELECT p.pName, sum(quantity) as totalQuantity FROM store.order AS o INNER JOIN  product AS p on o.product_ID = p.product_ID \n" +
+                "WHERE orderDate LIKE '%" + year + "%' GROUP BY p.pName ORDER BY SUM(quantity) DESC LIMIT 0,10";
+
+        try (Statement statement = getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                quantity = resultSet.getInt("totalQuantity");
+                productName = resultSet.getString("pName");
+                productsPerYear.add("Product " + (++id) + ": " + productName + "\tQuantity: " + quantity);
+            }
+            if (productsPerYear.isEmpty()) {
+                throw new RecordsNotFoundException("no records was found on year: " + year);
+            }
+        } catch (SQLException e) {
+            System.out.println("there was an error when trying to find the best-selling products per year");
+            e.printStackTrace();
+        }
+        return productsPerYear;
     }
 }

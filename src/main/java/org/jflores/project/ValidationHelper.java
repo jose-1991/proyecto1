@@ -6,11 +6,13 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class ValidationHelper {
-    public static final int MAX_VALUE_POSTAL_CODE = 100000;
+    public static final int MAX_VALUE_POSTAL_CODE = 99999;
     public static final String TRY_AGAIN_MESSAGE = "Please try again";
     public static final String ONLY_LETTERS = "^[A-Za-z\\s']+$";
-    public static final int MAX_OPTIONS = 4;
+    public static final int MAX_OPTIONS = 5;
     public static final String DATE_FORMAT = "^(\\d{1,2})(/)(\\d{1,2})(/)(\\d{4})$";
+    public static final int MIN_YEAR = 2014;
+    public static final int MIN_VALUE_INTEGER = 1;
 
     public static Scanner scanner = new Scanner(System.in);
     static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d/M/yyyy");
@@ -40,18 +42,18 @@ public class ValidationHelper {
         }
     }
 
-    public static int validateIsPositiveInteger(String value) {
+    public static int validateIsPositiveInteger(String value, int min, int max) {
         int number;
         while (true) {
 
             try {
                 value = validateIsNotEmpty(value);
                 number = Integer.parseInt(value);
-                if (number > 0 && IsLessThanSixDigits(number)) {
+                if (number >= min && number <= max) {
                     return number;
                 } else {
-                    System.out.println("Error! the number entered must be positive and up to 5 digits\n" +
-                            TRY_AGAIN_MESSAGE);
+                    System.out.println("Error! the number entered must be positive and must be between " + min + " to " + max +
+                            "\n" + TRY_AGAIN_MESSAGE);
                     value = scanner.nextLine();
                 }
             } catch (NumberFormatException e) {
@@ -60,10 +62,6 @@ public class ValidationHelper {
                 value = scanner.nextLine();
             }
         }
-    }
-
-    private static boolean IsLessThanSixDigits(int number) {
-        return number < MAX_VALUE_POSTAL_CODE;
     }
 
     public static double validatePositiveDecimal(String value) {
@@ -102,19 +100,6 @@ public class ValidationHelper {
         }
     }
 
-    public static int validateOption(String value) {
-        int number;
-        while (true) {
-            number = validateIsPositiveInteger(value);
-            if (number > MAX_OPTIONS) {
-                System.out.println("Error! the option entered does not exist" + TRY_AGAIN_MESSAGE);
-                value = scanner.nextLine();
-            } else {
-                return number;
-            }
-        }
-    }
-
     public static String validateDate(String value) {
         while (true) {
             value = validateDateFormat(value);
@@ -124,7 +109,7 @@ public class ValidationHelper {
                 Date date = simpleDateFormat.parse(value);
                 return simpleDateFormat.format(date);
             } catch (ParseException e) {
-                System.out.println("Error! the date entered does not exist\n" +TRY_AGAIN_MESSAGE);
+                System.out.println("Error! the date entered does not exist\n" + TRY_AGAIN_MESSAGE);
                 value = scanner.nextLine();
             }
         }

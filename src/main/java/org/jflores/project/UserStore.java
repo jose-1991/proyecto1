@@ -12,10 +12,11 @@ public class UserStore {
                 "-------- Select one of the following options ----------\n\n" +
                 " 1) Enter a new order\n" +
                 " 2) Modify an order\n" +
-                " 3) Delete an order\n"+
-                " 4) Generate daily report");
+                " 3) Delete an order\n" +
+                " 4) Generate daily report\n" +
+                " 5) Generate report of the top ten products per year");
 
-        int option = validateOption(scanner.nextLine());
+        int option = validateIsPositiveInteger(scanner.nextLine(),MIN_VALUE_INTEGER,MAX_OPTIONS);
         switch (option) {
             case 1:
                 orderService.addNewOrder();
@@ -28,6 +29,9 @@ public class UserStore {
                 break;
             case 4:
                 reportService.generateDailyReport();
+                break;
+            case 5:
+                reportService.generateTopTenProductPerYear();
                 break;
         }
     }
