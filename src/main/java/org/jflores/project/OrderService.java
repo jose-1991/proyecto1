@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 import static org.jflores.project.ValidationHelper.*;
+import static org.jflores.project.models.Tables.*;
 
 public class OrderService {
 
@@ -28,11 +29,11 @@ public class OrderService {
 
         System.out.println("===== Enter the customer's first and last name =====");
         String customerName = validateOnlyLetters(scanner.nextLine());
-        order.setCustomerId(findIdValue(customerName, Tables.CUSTOMER));
+        order.setCustomerId(findIdValue(customerName, CUSTOMER));
 
         System.out.println("===== Enter product name =====");
         String productName = validateIsNotEmpty(scanner.nextLine());
-        order.setProductId(findIdValue(productName, Tables.PRODUCT));
+        order.setProductId(findIdValue(productName, PRODUCT));
 
         System.out.println("===== Enter product quantity =====");
 
@@ -89,7 +90,7 @@ public class OrderService {
     private String findIdValue(String value, Tables table) {
         while (true) {
             try {
-                if (table.equals(Tables.CUSTOMER)) {
+                if (table.equals(CUSTOMER)) {
                     value = validateOnlyLetters(value);
                 } else {
                     value = validateIsNotEmpty(value);

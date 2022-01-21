@@ -1,6 +1,7 @@
 package org.jflores.project;
 
 import org.jflores.project.exceptions.RecordsNotFoundException;
+import org.jflores.project.models.StateAndQuantity;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -59,5 +60,25 @@ public class ReportsDAO {
             e.printStackTrace();
         }
         return productsPerYear;
+    }
+
+    public List<StateAndQuantity> findTopEstatesInDb(String productName) {
+        List<StateAndQuantity> stateAndQuantities = new ArrayList<>();
+        String query = "SELECT a.state, o.quantity FROM store.order AS o INNER JOIN product AS p ON o.product_ID = p.product_ID INNER JOIN address AS a\n" +
+                " ON o.address_ID = a.address_ID WHERE p.pName ='" + productName + "'";
+        try (Statement statement = getConnection().createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()){
+                StateAndQuantity stateAndQuantity = new StateAndQuantity();
+                stateAndQuantity.setState(resultSet.getString("state"));
+                stateAndQuantity.setQuantity(resultSet.getInt("quantity"));
+
+                stateAndQuantities.add(stateAndQuantity);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stateAndQuantities;
     }
 }

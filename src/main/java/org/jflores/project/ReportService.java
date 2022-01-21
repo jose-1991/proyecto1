@@ -1,9 +1,11 @@
 package org.jflores.project;
 
 import org.jflores.project.exceptions.RecordsNotFoundException;
+import org.jflores.project.models.StateAndQuantity;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.jflores.project.ValidationHelper.*;
 
@@ -27,7 +29,49 @@ public class ReportService {
 
         System.out.println("============= Top 10 product in year: " + year + " =============\n");
         topTenProducts.forEach(System.out::println);
+    }
 
+    public void generateTopStateReportPerProduct() {
+        System.out.println("====== Enter Product Name =====");
+        String productName = validateIsNotEmpty(scanner.nextLine());
+        List<StateAndQuantity> stateAndQuantity = findTopState(productName);
+
+        System.out.println("======= top state for product: " + productName + " =======");
+        String finalState = computeTopState(stateAndQuantity);
+        System.out.println(finalState);
+
+    }
+
+    private String computeTopState(List<StateAndQuantity> stateAndQuantityList) {
+        Map<String, Integer> stateAndQuantityMap = new HashMap<>();
+        for (StateAndQuantity s : stateAndQuantityList) {
+            if (stateAndQuantityMap.containsKey(s.getState())) {
+                Integer currentQuantity = stateAndQuantityMap.get(s.getState());
+                Integer newQuantity = s.getQuantity() + currentQuantity;
+                stateAndQuantityMap.put(s.getState(), newQuantity);
+            } else {
+                stateAndQuantityMap.put(s.getState(), s.getQuantity());
+            }
+        }
+        Map<String, Integer> sorted =
+                stateAndQuantityMap.entrySet().stream()
+                        .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        return (String) sorted.keySet().toArray()[0];
+    }
+
+    private List<StateAndQuantity> findTopState(String productName) {
+        while (true) {
+
+            try {
+                return reportsDAO.findTopEstatesInDb(productName);
+            } catch (RecordsNotFoundException e) {
+                System.out.println(TRY_AGAIN_MESSAGE);
+                productName = validateIsNotEmpty(scanner.nextLine());
+            }
+        }
     }
 
     private List<String> findTopTenProducts(int year) {
