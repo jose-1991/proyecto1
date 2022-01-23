@@ -34,11 +34,11 @@ public class ReportService {
     public void generateTopStateReportPerProduct() {
         System.out.println("====== Enter Product Name =====");
         String productName = validateIsNotEmpty(scanner.nextLine());
-        List<StateAndQuantity> stateAndQuantity = findTopState(productName);
+        List<StateAndQuantity> stateAndQuantityList = findTopState(productName);
 
-        System.out.println("======= top state for product: " + productName + " =======");
-        String finalState = computeTopState(stateAndQuantity);
-        System.out.println(finalState);
+        System.out.println("======= Top state for product: " + productName + " =======");
+        String topState = computeTopState(stateAndQuantityList);
+        System.out.println(topState);
 
     }
 
@@ -47,26 +47,24 @@ public class ReportService {
         for (StateAndQuantity s : stateAndQuantityList) {
             if (stateAndQuantityMap.containsKey(s.getState())) {
                 Integer currentQuantity = stateAndQuantityMap.get(s.getState());
-                Integer newQuantity = s.getQuantity() + currentQuantity;
-                stateAndQuantityMap.put(s.getState(), newQuantity);
-            } else {
-                stateAndQuantityMap.put(s.getState(), s.getQuantity());
+                s.setQuantity(s.getQuantity() + currentQuantity);
             }
+                stateAndQuantityMap.put(s.getState(), s.getQuantity());
         }
-        Map<String, Integer> sorted =
+        Map<String, Integer> stateAndQuantityMapSorted =
                 stateAndQuantityMap.entrySet().stream()
                         .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-        return (String) sorted.keySet().toArray()[0];
+        return (String) stateAndQuantityMapSorted.keySet().toArray()[0];
     }
 
     private List<StateAndQuantity> findTopState(String productName) {
         while (true) {
 
             try {
-                return reportsDAO.findTopEstatesInDb(productName);
+                return reportsDAO.findStateAndQuantityPerProductInDb(productName);
             } catch (RecordsNotFoundException e) {
                 System.out.println(TRY_AGAIN_MESSAGE);
                 productName = validateIsNotEmpty(scanner.nextLine());

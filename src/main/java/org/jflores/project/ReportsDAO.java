@@ -62,8 +62,8 @@ public class ReportsDAO {
         return productsPerYear;
     }
 
-    public List<StateAndQuantity> findTopEstatesInDb(String productName) {
-        List<StateAndQuantity> stateAndQuantities = new ArrayList<>();
+    public List<StateAndQuantity> findStateAndQuantityPerProductInDb(String productName) {
+        List<StateAndQuantity> stateAndQuantityList = new ArrayList<>();
         String query = "SELECT a.state, o.quantity FROM store.order AS o INNER JOIN product AS p ON o.product_ID = p.product_ID INNER JOIN address AS a\n" +
                 " ON o.address_ID = a.address_ID WHERE p.pName ='" + productName + "'";
         try (Statement statement = getConnection().createStatement();
@@ -73,12 +73,13 @@ public class ReportsDAO {
                 stateAndQuantity.setState(resultSet.getString("state"));
                 stateAndQuantity.setQuantity(resultSet.getInt("quantity"));
 
-                stateAndQuantities.add(stateAndQuantity);
+                stateAndQuantityList.add(stateAndQuantity);
             }
 
         } catch (SQLException e) {
+            System.out.println("there was an error when trying to find state and quantity per product in Data Base");
             e.printStackTrace();
         }
-        return stateAndQuantities;
+        return stateAndQuantityList;
     }
 }

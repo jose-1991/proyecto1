@@ -15,7 +15,7 @@ public class UserStore {
                 " 3) Delete an order\n" +
                 " 4) Generate daily report\n" +
                 " 5) Generate report of the top ten products per year\n" +
-                " 6) Generate report of the state that more orders have by product");
+                " 6) generate  report state that generates more orders per product");
 
         int option = validateIsPositiveInteger(scanner.nextLine(),MIN_VALUE_INTEGER,MAX_OPTIONS);
         switch (option) {
