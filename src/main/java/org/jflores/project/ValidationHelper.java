@@ -9,7 +9,7 @@ public class ValidationHelper {
     public static final int MAX_VALUE_POSTAL_CODE = 99999;
     public static final String TRY_AGAIN_MESSAGE = "Please try again";
     public static final String ONLY_LETTERS = "^[A-Za-z\\s']+$";
-    public static final int MAX_OPTIONS = 6;
+    public static final int MAX_OPTIONS = 7;
     public static final String DATE_FORMAT = "^(\\d{1,2})(/)(\\d{1,2})(/)(\\d{4})$";
     public static final int MIN_YEAR = 2014;
     public static final int MIN_VALUE_INTEGER = 1;

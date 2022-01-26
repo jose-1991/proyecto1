@@ -42,6 +42,47 @@ public class ReportService {
 
     }
 
+    public void generateTopCustomerReportPerState() {
+        System.out.println("======== Enter State =======");
+        String state = validateOnlyLetters(scanner.nextLine());
+        List<String> customerList = findTopCustomer(state);
+        System.out.println("======== Top customer for state: "+ state + " ==========");
+        String topCustomer = computeTopCustomer(customerList);
+        System.out.println(topCustomer);
+    }
+
+    private String computeTopCustomer(List<String> customerList) {
+        Map<String,Integer> topCustomerMap = new HashMap<>();
+        for (String c: customerList){
+            if (topCustomerMap.containsKey(c)){
+                Integer newValue = topCustomerMap.get(c) + 1;
+                topCustomerMap.put(c,newValue);
+            }else {
+                topCustomerMap.put(c, 1);
+            }
+        }
+        Map<String, Integer> topCustomerMapSorted = mapSortedByValueReversed(topCustomerMap);
+
+        return (String) topCustomerMapSorted.keySet().toArray()[0];
+    }
+
+    private Map<String, Integer> mapSortedByValueReversed(Map<String, Integer> map) {
+       return map.entrySet().stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    }
+
+    private List<String> findTopCustomer(String state) {
+        while (true) {
+            try {
+                return reportsDAO.findTopCustomerPerStateInDb(state);
+            } catch (RecordsNotFoundException e) {
+                System.out.println(TRY_AGAIN_MESSAGE);
+                state = validateOnlyLetters(scanner.nextLine());
+            }
+        }
+    }
+
     private String computeTopState(List<StateAndQuantity> stateAndQuantityList) {
         Map<String, Integer> stateAndQuantityMap = new HashMap<>();
         for (StateAndQuantity s : stateAndQuantityList) {
@@ -49,13 +90,9 @@ public class ReportService {
                 Integer currentQuantity = stateAndQuantityMap.get(s.getState());
                 s.setQuantity(s.getQuantity() + currentQuantity);
             }
-                stateAndQuantityMap.put(s.getState(), s.getQuantity());
+            stateAndQuantityMap.put(s.getState(), s.getQuantity());
         }
-        Map<String, Integer> stateAndQuantityMapSorted =
-                stateAndQuantityMap.entrySet().stream()
-                        .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                        .collect(Collectors.toMap(
-                                Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        Map<String, Integer> stateAndQuantityMapSorted = mapSortedByValueReversed(stateAndQuantityMap);
 
         return (String) stateAndQuantityMapSorted.keySet().toArray()[0];
     }

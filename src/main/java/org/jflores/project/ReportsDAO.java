@@ -66,6 +66,7 @@ public class ReportsDAO {
         List<StateAndQuantity> stateAndQuantityList = new ArrayList<>();
         String query = "SELECT a.state, o.quantity FROM store.order AS o INNER JOIN product AS p ON o.product_ID = p.product_ID INNER JOIN address AS a\n" +
                 " ON o.address_ID = a.address_ID WHERE p.pName ='" + productName + "'";
+
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()){
@@ -75,11 +76,32 @@ public class ReportsDAO {
 
                 stateAndQuantityList.add(stateAndQuantity);
             }
-
+            if (stateAndQuantityList.isEmpty()){
+                throw new RecordsNotFoundException("no records was found for product: " + productName);
+            }
         } catch (SQLException e) {
             System.out.println("there was an error when trying to find state and quantity per product in Data Base");
             e.printStackTrace();
         }
         return stateAndQuantityList;
+    }
+
+    public List<String> findTopCustomerPerStateInDb(String state){
+        List<String> customerList = new ArrayList<>();
+        String query = "SELECT c.cName FROM store.order AS o INNER JOIN customer AS c ON o.customer_ID = c.customer_ID INNER JOIN address AS a\n" +
+                "ON o.address_ID = a.address_ID  WHERE a.state ='"+state +"'";
+
+        try (Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(query)){
+            while (resultSet.next()){
+                customerList.add(resultSet.getString("cName"));
+            }
+            if (customerList.isEmpty()){
+                throw new RecordsNotFoundException("no records was found for state: " + state);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customerList;
     }
 }

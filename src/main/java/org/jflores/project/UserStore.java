@@ -7,6 +7,7 @@ public class UserStore {
     public static void main(String[] args) {
         OrderService orderService = new OrderService();
         ReportService reportService = new ReportService();
+        reportService.generateTopCustomerReportPerState();
 
         System.out.println("============================  MENU  =========================\n" +
                 "-------- Select one of the following options ----------\n\n" +
@@ -15,7 +16,8 @@ public class UserStore {
                 " 3) Delete an order\n" +
                 " 4) Generate daily report\n" +
                 " 5) Generate report of the top ten products per year\n" +
-                " 6) Generate  report state that generates more orders per product");
+                " 6) Generate  report state that generates more orders per product" +
+                " 7) Generate report top customer per state");
 
         int option = validateIsPositiveInteger(scanner.nextLine(),MIN_VALUE_INTEGER,MAX_OPTIONS);
         switch (option) {
@@ -36,6 +38,9 @@ public class UserStore {
                 break;
             case 6:
                 reportService.generateTopStateReportPerProduct();
+                break;
+            case 7:
+                reportService.generateTopCustomerReportPerState();
                 break;
         }
     }
