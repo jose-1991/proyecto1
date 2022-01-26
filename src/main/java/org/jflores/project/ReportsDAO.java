@@ -28,10 +28,10 @@ public class ReportsDAO {
                 totalSales.add(total);
             }
             if (totalSales.isEmpty()) {
-                throw new RecordsNotFoundException("no records was found on date: " + date);
+                throw new RecordsNotFoundException("No records was found on date: " + date);
             }
         } catch (SQLException e) {
-            System.out.println("there was an error searching for the total sales");
+            System.out.println("There was an error searching for the total sales");
             e.printStackTrace();
         }
         return totalSales;
@@ -53,10 +53,10 @@ public class ReportsDAO {
                 productsPerYear.add("Product " + (++id) + ": " + productName + "\tQuantity: " + quantity);
             }
             if (productsPerYear.isEmpty()) {
-                throw new RecordsNotFoundException("no records was found on year: " + year);
+                throw new RecordsNotFoundException("No records was found on year: " + year);
             }
         } catch (SQLException e) {
-            System.out.println("there was an error when trying to find the best-selling products per year");
+            System.out.println("There was an error when trying to find the best-selling products per year");
             e.printStackTrace();
         }
         return productsPerYear;
@@ -77,10 +77,10 @@ public class ReportsDAO {
                 stateAndQuantityList.add(stateAndQuantity);
             }
             if (stateAndQuantityList.isEmpty()){
-                throw new RecordsNotFoundException("no records was found for product: " + productName);
+                throw new RecordsNotFoundException("No records was found for product: " + productName);
             }
         } catch (SQLException e) {
-            System.out.println("there was an error when trying to find state and quantity per product in Data Base");
+            System.out.println("There was an error when trying to find state and quantity per product in Data Base");
             e.printStackTrace();
         }
         return stateAndQuantityList;
@@ -97,9 +97,10 @@ public class ReportsDAO {
                 customerList.add(resultSet.getString("cName"));
             }
             if (customerList.isEmpty()){
-                throw new RecordsNotFoundException("no records was found for state: " + state);
+                throw new RecordsNotFoundException("No records was found for state: " + state);
             }
         } catch (SQLException e) {
+            System.out.println("There was an error when trying to find top customer per state in Data Base");
             e.printStackTrace();
         }
         return customerList;

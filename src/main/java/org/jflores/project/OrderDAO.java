@@ -22,7 +22,7 @@ public class OrderDAO {
         try {
             FileHelper.convertCsvToObjectLists();
         } catch (IOException e) {
-            throw new RuntimeException("there was an error trying to read the file");
+            throw new RuntimeException("There was an error trying to read the file");
         }
         for (Tables t : Tables.values()) {
             try {
@@ -37,7 +37,7 @@ public class OrderDAO {
                             statement.setString(2, c.getCustomerName());
                             statement.addBatch();
                         }
-                        System.out.println("records were saved in customer table successfully!");
+                        System.out.println("Records were saved in customer table successfully!");
 
                         break;
                     case ADDRESS:
@@ -49,7 +49,7 @@ public class OrderDAO {
                             statement.setString(4, a.getCity());
                             statement.addBatch();
                         }
-                        System.out.println("records were saved in address table successfully!");
+                        System.out.println("Records were saved in address table successfully!");
 
                         break;
                     case PRODUCT:
@@ -61,7 +61,7 @@ public class OrderDAO {
                             statement.setString(4, p.getProductName());
                             statement.addBatch();
                         }
-                        System.out.println("records were saved in product table successfully!");
+                        System.out.println("Records were saved in product table successfully!");
 
                         break;
                     case ORDER:
@@ -79,7 +79,7 @@ public class OrderDAO {
                             statement.setDouble(10, o.getProfit());
                             statement.addBatch();
                         }
-                        System.out.println("records were saved in order table successfully!");
+                        System.out.println("Records were saved in order table successfully!");
                         break;
                 }
                 statement.executeBatch();
@@ -87,7 +87,7 @@ public class OrderDAO {
                 statement.close();
 
             } catch (SQLException exception) {
-                System.out.println("there was an error trying to save records to the Database");
+                System.out.println("There was an error trying to save records to the Database");
                 exception.printStackTrace();
             }
         }
@@ -104,7 +104,7 @@ public class OrderDAO {
             statement.close();
 
         } catch (SQLException exception) {
-            System.out.println("there was an error trying to delete the records");
+            System.out.println("There was an error trying to delete the records");
             exception.printStackTrace();
         }
     }
@@ -144,7 +144,7 @@ public class OrderDAO {
             }
 
         } catch (SQLException exception) {
-            System.out.println("there was an error searching for the id value");
+            System.out.println("There was an error searching for the id value");
             exception.printStackTrace();
         }
         return idValue;
@@ -158,7 +158,7 @@ public class OrderDAO {
              ResultSet resultSet = statement.executeQuery(query)) {
             addressIdExists = resultSet.next();
         } catch (SQLException e) {
-            System.out.println("there was an error searching for the id value");
+            System.out.println("There was an error searching for the id value");
             e.printStackTrace();
         }
 
@@ -174,10 +174,10 @@ public class OrderDAO {
             statement.setDouble(3, order.getTotal());
             statement.setDouble(4, order.getProfit());
             statement.executeUpdate();
-            System.out.println("the registry was modified successfully!");
+            System.out.println("The registry was modified successfully!");
 
         } catch (SQLException exception) {
-            System.out.println("there was an error trying to modify a record");
+            System.out.println("There was an error trying to modify a record");
             exception.printStackTrace();
         }
     }
@@ -199,10 +199,10 @@ public class OrderDAO {
             statement.setDouble(10, order.getProfit());
             statement.executeUpdate();
 
-            System.out.println("the order saved successfully!");
+            System.out.println("The order saved successfully!");
 
         } catch (SQLException exception) {
-            System.out.println("there was an error trying to add a new order");
+            System.out.println("There was an error trying to add a new order");
             exception.printStackTrace();
         }
 
@@ -220,7 +220,7 @@ public class OrderDAO {
                 }
             }
         } catch (SQLException exception) {
-            System.out.println("there was an error checking if the database is empty");
+            System.out.println("There was an error checking if the database is empty");
         }
         return true;
 
@@ -245,7 +245,7 @@ public class OrderDAO {
             }
 
         } catch (SQLException exception) {
-            System.out.println("there was an error trying to get an order record");
+            System.out.println("There was an error trying to get an order record");
         }
         return order;
 
@@ -257,10 +257,10 @@ public class OrderDAO {
             stmt.setString(1, orderId);
             stmt.executeUpdate();
 
-            System.out.println("order removed successfully!");
+            System.out.println("Order removed successfully!");
 
         } catch (SQLException e) {
-            System.out.println("there was an error trying to delete an order");
+            System.out.println("There was an error trying to delete an order");
             e.printStackTrace();
         }
     }
