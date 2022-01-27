@@ -1,8 +1,15 @@
 package org.jflores.project;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.jflores.project.exceptions.RecordsNotFoundException;
+import org.jflores.project.exceptions.ReportPdfNotFound;
 import org.jflores.project.models.StateAndQuantity;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,53 +18,67 @@ import static org.jflores.project.ValidationHelper.*;
 
 public class ReportService {
     ReportsDAO reportsDAO = new ReportsDAO();
+    static String date;
+    static int year;
+    static String productName;
+    static String state;
 
     public void generateDailyReport() {
         System.out.println("===== Enter the date for the report   (dd/mm/yyyy) =====");
-        String date = validateDate(scanner.nextLine());
-        List<Double> totalSales = findDailyTotalSales(date);
+        date = validateDate(scanner.nextLine());
+        List<Double> totalSales = findDailyTotalSales();
 
-        System.out.println("============== Date: " + date + " ==============");
         double dailyTotal = computeTotal(totalSales);
-        System.out.println("Total Sales = " + dailyTotal);
+        String name = "Daily Report (" + date + ")";
+        String content = "============== Date: " + date + " ==============\n" +
+                "Total Sales = " + dailyTotal;
+        createPdfReport(name, content);
+        System.out.println(content);
     }
 
     public void generateTopTenProductPerYear() {
         System.out.println("====== Enter the year =====");
-        int year = validateIsPositiveInteger(scanner.nextLine(), MIN_YEAR, getCurrentYear());
-        List<String> topTenProducts = findTopTenProducts(year);
-
-        System.out.println("============= Top 10 product in year: " + year + " =============\n");
-        topTenProducts.forEach(System.out::println);
+        year = validateIsPositiveInteger(scanner.nextLine(), MIN_YEAR, getCurrentYear());
+        List<String> topTenProducts = findTopTenProducts();
+        String name = "Top ten product (" + year + ")";
+        StringBuilder content = new StringBuilder();
+        content.append("============= Top 10 product in year: ").append(year).append(" =============\n");
+        topTenProducts.forEach(content::append);
+        createPdfReport(name, content.toString());
+        System.out.println(content);
     }
 
     public void generateTopStateReportPerProduct() {
         System.out.println("====== Enter Product Name =====");
-        String productName = validateIsNotEmpty(scanner.nextLine());
-        List<StateAndQuantity> stateAndQuantityList = findTopState(productName);
+        productName = validateIsNotEmpty(scanner.nextLine());
+        List<StateAndQuantity> stateAndQuantityList = findTopState();
 
-        System.out.println("======= Top state for product: " + productName + " =======");
         String topState = computeTopState(stateAndQuantityList);
-        System.out.println(topState);
+        String name = "Top state report (" + productName + ")";
+        String content = "======= Top state for product: " + productName + " ========\n" + topState;
+        createPdfReport(name, content);
+        System.out.println(content);
 
     }
 
     public void generateTopCustomerReportPerState() {
         System.out.println("======== Enter State =======");
-        String state = validateOnlyLetters(scanner.nextLine());
-        List<String> customerList = findTopCustomer(state);
-        System.out.println("======== Top customer for state: "+ state + " ==========");
+        state = validateOnlyLetters(scanner.nextLine());
+        List<String> customerList = findTopCustomer();
         String topCustomer = computeTopCustomer(customerList);
-        System.out.println(topCustomer);
+        String name = "Top customer report (" + state + ")";
+        String content = "======== Top customer for state: " + state + " ===========\n" + topCustomer;
+        createPdfReport(name, content);
+        System.out.println(content);
     }
 
     private String computeTopCustomer(List<String> customerList) {
-        Map<String,Integer> topCustomerMap = new HashMap<>();
-        for (String c: customerList){
-            if (topCustomerMap.containsKey(c)){
+        Map<String, Integer> topCustomerMap = new HashMap<>();
+        for (String c : customerList) {
+            if (topCustomerMap.containsKey(c)) {
                 Integer newValue = topCustomerMap.get(c) + 1;
-                topCustomerMap.put(c,newValue);
-            }else {
+                topCustomerMap.put(c, newValue);
+            } else {
                 topCustomerMap.put(c, 1);
             }
         }
@@ -67,12 +88,12 @@ public class ReportService {
     }
 
     private Map<String, Integer> mapSortedByValueReversed(Map<String, Integer> map) {
-       return map.entrySet().stream()
+        return map.entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-    private List<String> findTopCustomer(String state) {
+    private List<String> findTopCustomer() {
         while (true) {
             try {
                 return reportsDAO.findTopCustomerPerStateInDb(state);
@@ -97,7 +118,7 @@ public class ReportService {
         return (String) stateAndQuantityMapSorted.keySet().toArray()[0];
     }
 
-    private List<StateAndQuantity> findTopState(String productName) {
+    private List<StateAndQuantity> findTopState() {
         while (true) {
 
             try {
@@ -109,7 +130,7 @@ public class ReportService {
         }
     }
 
-    private List<String> findTopTenProducts(int year) {
+    private List<String> findTopTenProducts() {
         while (true) {
 
             try {
@@ -129,7 +150,7 @@ public class ReportService {
         return total;
     }
 
-    private List<Double> findDailyTotalSales(String date) {
+    private List<Double> findDailyTotalSales() {
         while (true) {
 
             try {
@@ -145,5 +166,24 @@ public class ReportService {
     private int getCurrentYear() {
         LocalDate date = LocalDate.now();
         return date.getYear();
+    }
+
+    public void createPdfReport(String name, String content) {
+        Document document = new Document();
+        try {
+            String location = "C:\\Users\\JoSe\\Desktop\\CursoJava\\IdeaProjects\\proyectoN1\\src\\main\\java\\org\\jflores\\project\\reports\\" + name + ".pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(location));
+
+            document.open();
+            Paragraph paragraph = new Paragraph(content);
+            document.add(paragraph);
+            document.close();
+
+        } catch (FileNotFoundException e) {
+            throw new ReportPdfNotFound("Error when updating report, the pdf report is in use");
+        } catch (DocumentException e) {
+            System.out.println("There was an error trying to create a PDF report");
+            e.printStackTrace();
+        }
     }
 }
