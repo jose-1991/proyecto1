@@ -179,6 +179,7 @@ public class ReportService {
             document.add(paragraph);
             document.close();
 
+
         } catch (FileNotFoundException e) {
             throw new ReportPdfNotFound("Error when updating report, the pdf report is in use");
         } catch (DocumentException e) {
