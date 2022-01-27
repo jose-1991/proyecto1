@@ -28,10 +28,10 @@ public class ReportsDAO {
                 totalSales.add(total);
             }
             if (totalSales.isEmpty()) {
-                throw new RecordsNotFoundException("no records was found on date: " + date);
+                throw new RecordsNotFoundException("No records was found on date: " + date);
             }
         } catch (SQLException e) {
-            System.out.println("there was an error searching for the total sales");
+            System.out.println("There was an error searching for the total sales");
             e.printStackTrace();
         }
         return totalSales;
@@ -53,10 +53,10 @@ public class ReportsDAO {
                 productsPerYear.add("\nProduct " + (++id) + ": " + productName + "   Quantity: " + quantity);
             }
             if (productsPerYear.isEmpty()) {
-                throw new RecordsNotFoundException("no records was found on year: " + year);
+                throw new RecordsNotFoundException("No records was found on year: " + year);
             }
         } catch (SQLException e) {
-            System.out.println("there was an error when trying to find the best-selling products per year");
+            System.out.println("There was an error when trying to find the best-selling products per year");
             e.printStackTrace();
         }
         return productsPerYear;
@@ -68,7 +68,7 @@ public class ReportsDAO {
                 " ON o.address_ID = a.address_ID WHERE p.pName ='" + productName + "'";
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 StateAndQuantity stateAndQuantity = new StateAndQuantity();
                 stateAndQuantity.setState(resultSet.getString("state"));
                 stateAndQuantity.setQuantity(resultSet.getInt("quantity"));
@@ -77,7 +77,7 @@ public class ReportsDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("there was an error when trying to find state and quantity per product in Data Base");
+            System.out.println("There was an error when trying to find state and quantity per product in Data Base");
             e.printStackTrace();
         }
         return stateAndQuantityList;
