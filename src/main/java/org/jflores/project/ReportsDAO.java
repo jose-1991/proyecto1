@@ -50,7 +50,7 @@ public class ReportsDAO {
             while (resultSet.next()) {
                 quantity = resultSet.getInt("totalQuantity");
                 productName = resultSet.getString("pName");
-                productsPerYear.add("Product " + (++id) + ": " + productName + "\tQuantity: " + quantity);
+                productsPerYear.add("\nProduct " + (++id) + ": " + productName + "   Quantity: " + quantity);
             }
             if (productsPerYear.isEmpty()) {
                 throw new RecordsNotFoundException("No records was found on year: " + year);
