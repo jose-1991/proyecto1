@@ -12,6 +12,7 @@ classes/
 out/
 target/
 log/
+src/main/java/org/jflores/project/reports/
 
 ### Gradle ###
 .gradle/
