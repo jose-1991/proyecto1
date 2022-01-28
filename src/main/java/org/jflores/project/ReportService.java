@@ -1,19 +1,13 @@
 package org.jflores.project;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
 import org.jflores.project.exceptions.RecordsNotFoundException;
-import org.jflores.project.exceptions.ReportPdfNotFound;
 import org.jflores.project.models.StateAndQuantity;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.jflores.project.FileHelper.createPdfReport;
 import static org.jflores.project.ValidationHelper.*;
 
 public class ReportService {
@@ -127,25 +121,5 @@ public class ReportService {
     private int getCurrentYear() {
         LocalDate date = LocalDate.now();
         return date.getYear();
-    }
-
-    public void createPdfReport(String name, String content) {
-        Document document = new Document();
-        try {
-            String location = "C:\\Users\\JoSe\\Desktop\\CursoJava\\IdeaProjects\\proyectoN1\\src\\main\\java\\org\\jflores\\project\\reports\\" + name + ".pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(location));
-
-            document.open();
-            Paragraph paragraph = new Paragraph(content);
-            document.add(paragraph);
-            document.close();
-
-
-        } catch (FileNotFoundException e) {
-            throw new ReportPdfNotFound("Error when updating report, the pdf report is in use");
-        } catch (DocumentException e) {
-            System.out.println("There was an error trying to create a PDF report");
-            e.printStackTrace();
-        }
     }
 }
