@@ -19,7 +19,7 @@ public class UserStore {
                 " 6) Generate  report state that generates more orders per product" +
                 " 7) Generate report top customer per state");
 
-        int option = validateIsPositiveInteger(scanner.nextLine(),MIN_VALUE_INTEGER,MAX_OPTIONS);
+        int option = validateIsPositiveInteger(scanner.nextLine(), MIN_VALUE_INTEGER, MAX_OPTIONS);
         switch (option) {
             case 1:
                 orderService.addNewOrder();

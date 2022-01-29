@@ -1,22 +1,27 @@
 package org.jflores.project;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.jflores.project.exceptions.DifferentExtensionException;
 import org.jflores.project.exceptions.EmptyFileException;
+import org.jflores.project.exceptions.ReportPdfNotFoundException;
 import org.jflores.project.models.Address;
 import org.jflores.project.models.Customer;
 import org.jflores.project.models.Order;
 import org.jflores.project.models.Product;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileHelper {
     public static final String FILE_NAME = "C:\\Users\\JoSe\\Desktop\\Proyecto1\\StoreData.csv";
+    public static final String LOCATION_REPORT = "C:\\Users\\JoSe\\Desktop\\CursoJava\\IdeaProjects\\proyectoN1\\src\\main\\java\\org\\jflores\\project\\reports\\";
     public static final String SEPARATOR = ";";
     public static final String EXTENSION_CSV = ".csv";
+    public static final String EXTENSION_PDF = ".pdf";
     static int nRow = 1;
     static List<Customer> customerList = new ArrayList<>();
     static List<Product> productList = new ArrayList<>();
@@ -104,4 +109,26 @@ public class FileHelper {
                     "an empty value was found in a row" + nRow + ", this order will not be registered");
         }
     }
+
+    public static void createPdfReport(String name, String content) {
+        Document document = new Document();
+        try {
+            String location = LOCATION_REPORT + name + EXTENSION_PDF;
+            PdfWriter.getInstance(document, new FileOutputStream(location));
+
+            document.open();
+            Paragraph paragraph = new Paragraph(content);
+            document.add(paragraph);
+            document.close();
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new ReportPdfNotFoundException("Error when updating report, the pdf report is in use");
+        } catch (DocumentException e) {
+            System.out.println("There was an error trying to create a PDF report");
+            e.printStackTrace();
+        }
+    }
+
 }

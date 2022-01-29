@@ -7,38 +7,50 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.jflores.project.FileHelper.createPdfReport;
 import static org.jflores.project.ValidationHelper.*;
 
 public class ReportService {
-    ReportsDAO reportsDAO = new ReportsDAO();
+    private ReportsDAO reportsDAO = new ReportsDAO();
+    private static String date;
+    private static int year;
+    private static String productName;
 
     public void generateDailyReport() {
         System.out.println("===== Enter the date for the report   (dd/mm/yyyy) =====");
-        String date = validateDate(scanner.nextLine());
-        List<Double> totalSales = findDailyTotalSales(date);
+        date = validateDate(scanner.nextLine());
+        List<Double> totalSales = findDailyTotalSales();
 
-        System.out.println("============== Date: " + date + " ==============");
         double dailyTotal = computeTotal(totalSales);
-        System.out.println("Total Sales = " + dailyTotal);
+        String name = "Daily Report (" + date.replace('/','_') + ")";
+        String content = "============== Date: " + date + " ==============\n" +
+                "Total Sales = " + dailyTotal;
+        createPdfReport(name, content);
+        System.out.println(content);
     }
 
     public void generateTopTenProductPerYear() {
         System.out.println("====== Enter the year =====");
-        int year = validateIsPositiveInteger(scanner.nextLine(), MIN_YEAR, getCurrentYear());
-        List<String> topTenProducts = findTopTenProducts(year);
-
-        System.out.println("============= Top 10 product in year: " + year + " =============\n");
-        topTenProducts.forEach(System.out::println);
+        year = validateIsPositiveInteger(scanner.nextLine(), MIN_YEAR, getCurrentYear());
+        List<String> topTenProducts = findTopTenProducts();
+        String name = "Top ten product (" + year + ")";
+        StringBuilder content = new StringBuilder();
+        content.append("============= Top 10 product in year: ").append(year).append(" =============\n");
+        topTenProducts.forEach(content::append);
+        createPdfReport(name, content.toString());
+        System.out.println(content);
     }
 
     public void generateTopStateReportPerProduct() {
         System.out.println("====== Enter Product Name =====");
-        String productName = validateIsNotEmpty(scanner.nextLine());
-        List<StateAndQuantity> stateAndQuantityList = findTopState(productName);
+        productName = validateIsNotEmpty(scanner.nextLine());
+        List<StateAndQuantity> stateAndQuantityList = findTopState();
 
-        System.out.println("======= Top state for product: " + productName + " =======");
         String topState = computeTopState(stateAndQuantityList);
-        System.out.println(topState);
+        String name = "Top state report (" + productName + ")";
+        String content = "======= Top state for product: " + productName + " ========\n" + topState;
+        createPdfReport(name, content);
+        System.out.println(content);
 
     }
 
@@ -97,7 +109,7 @@ public class ReportService {
         return (String) stateAndQuantityMapSorted.keySet().toArray()[0];
     }
 
-    private List<StateAndQuantity> findTopState(String productName) {
+    private List<StateAndQuantity> findTopState() {
         while (true) {
 
             try {
@@ -109,7 +121,7 @@ public class ReportService {
         }
     }
 
-    private List<String> findTopTenProducts(int year) {
+    private List<String> findTopTenProducts() {
         while (true) {
 
             try {
@@ -129,7 +141,7 @@ public class ReportService {
         return total;
     }
 
-    private List<Double> findDailyTotalSales(String date) {
+    private List<Double> findDailyTotalSales() {
         while (true) {
 
             try {
