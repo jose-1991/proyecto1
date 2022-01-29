@@ -1,5 +1,6 @@
-package org.jflores.project;
+package org.jflores.project.service;
 
+import org.jflores.project.dao.OrderDAO;
 import org.jflores.project.exceptions.IdValueNotFoundException;
 import org.jflores.project.models.Order;
 import org.jflores.project.models.Tables;
@@ -8,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-import static org.jflores.project.ValidationHelper.*;
+import static org.jflores.project.helper.ValidationHelper.*;
 import static org.jflores.project.models.Tables.*;
 
 public class OrderService {
@@ -24,7 +25,7 @@ public class OrderService {
     public void addNewOrder() {
 
         Order order = new Order();
-        order.setOrderId(getNewOrderId());
+        order.setOrderId(generateOrderId());
         order.setOrderDate(getCurrentDate());
 
         System.out.println("===== Enter the customer's first and last name =====");
@@ -75,11 +76,10 @@ public class OrderService {
         }
     }
 
-    private String getNewOrderId() {
-        int fourDigitNumber = (int) (Math.random() * 100) + 2000;
+    private String generateOrderId() {
         int sixDigitNumber = (int) (Math.random() * 100000) + 100000;
 
-        return COUNTRY_US + DASH + fourDigitNumber + DASH + sixDigitNumber;
+        return COUNTRY_US + DASH + getCurrentYear() + DASH + sixDigitNumber;
     }
 
     private String getCurrentDate() {

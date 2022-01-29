@@ -1,4 +1,4 @@
-package org.jflores.project;
+package org.jflores.project.dao;
 
 import org.jflores.project.exceptions.RecordsNotFoundException;
 import org.jflores.project.models.StateAndQuantity;

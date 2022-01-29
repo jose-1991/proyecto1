@@ -1,20 +1,21 @@
-package org.jflores.project;
+package org.jflores.project.service;
 
+import org.jflores.project.dao.ReportsDAO;
 import org.jflores.project.exceptions.RecordsNotFoundException;
 import org.jflores.project.models.StateAndQuantity;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.jflores.project.FileHelper.createPdfReport;
-import static org.jflores.project.ValidationHelper.*;
+import static org.jflores.project.helper.FileHelper.createPdfReport;
+import static org.jflores.project.helper.ValidationHelper.*;
 
 public class ReportService {
     private ReportsDAO reportsDAO = new ReportsDAO();
-    private static String date;
-    private static int year;
-    private static String productName;
+    private String date;
+    private int year;
+    private String productName;
+    private String state;
 
     public void generateDailyReport() {
         System.out.println("===== Enter the date for the report   (dd/mm/yyyy) =====");
@@ -22,7 +23,7 @@ public class ReportService {
         List<Double> totalSales = findDailyTotalSales();
 
         double dailyTotal = computeTotal(totalSales);
-        String name = "Daily Report (" + date.replace('/','_') + ")";
+        String name = "Daily Report (" + date.replace('/', '_') + ")";
         String content = "============== Date: " + date + " ==============\n" +
                 "Total Sales = " + dailyTotal;
         createPdfReport(name, content);
@@ -56,22 +57,23 @@ public class ReportService {
 
     public void generateTopCustomerReportPerState() {
         System.out.println("======== Enter State =======");
-        String state = validateOnlyLetters(scanner.nextLine());
-        List<String> customerList = findTopCustomer(state);
-        System.out.println("======== Top customer for state: "+ state + " ==========");
+        state = validateOnlyLetters(scanner.nextLine());
+        List<String> customerList = findTopCustomer();
         String topCustomer = computeTopCustomer(customerList);
-        System.out.println(topCustomer);
+        String name = "Top customer Report (" + state + ")";
+        String content = "======== Top customer for state: " + state + " ==========\n" + topCustomer;
+        createPdfReport(name, content);
+        System.out.println(content);
     }
 
     private String computeTopCustomer(List<String> customerList) {
-        Map<String,Integer> topCustomerMap = new HashMap<>();
-        for (String c: customerList){
-            if (topCustomerMap.containsKey(c)){
-                Integer newValue = topCustomerMap.get(c) + 1;
-                topCustomerMap.put(c,newValue);
-            }else {
-                topCustomerMap.put(c, 1);
+        Map<String, Integer> topCustomerMap = new HashMap<>();
+        for (String c : customerList) {
+            Integer newValue = 1;
+            if (topCustomerMap.containsKey(c)) {
+                newValue = topCustomerMap.get(c) + 1;
             }
+            topCustomerMap.put(c, newValue);
         }
         Map<String, Integer> topCustomerMapSorted = mapSortedByValueReversed(topCustomerMap);
 
@@ -79,12 +81,12 @@ public class ReportService {
     }
 
     private Map<String, Integer> mapSortedByValueReversed(Map<String, Integer> map) {
-       return map.entrySet().stream()
+        return map.entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
-    private List<String> findTopCustomer(String state) {
+    private List<String> findTopCustomer() {
         while (true) {
             try {
                 return reportsDAO.findTopCustomerPerStateInDb(state);
@@ -152,10 +154,5 @@ public class ReportService {
                 date = validateDate(scanner.nextLine());
             }
         }
-    }
-
-    private int getCurrentYear() {
-        LocalDate date = LocalDate.now();
-        return date.getYear();
     }
 }

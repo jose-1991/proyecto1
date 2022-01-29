@@ -1,4 +1,4 @@
-package org.jflores.project;
+package org.jflores.project.helper;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -23,10 +23,10 @@ public class FileHelper {
     public static final String EXTENSION_CSV = ".csv";
     public static final String EXTENSION_PDF = ".pdf";
     static int nRow = 1;
-    static List<Customer> customerList = new ArrayList<>();
-    static List<Product> productList = new ArrayList<>();
-    static List<Order> orderList = new ArrayList<>();
-    static List<Address> addressList = new ArrayList<>();
+    public static List<Customer> customerList = new ArrayList<>();
+    public static List<Product> productList = new ArrayList<>();
+    public static List<Order> orderList = new ArrayList<>();
+    public static List<Address> addressList = new ArrayList<>();
 
     public static void convertCsvToObjectLists() throws IOException {
 

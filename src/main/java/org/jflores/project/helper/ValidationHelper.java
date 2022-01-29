@@ -1,7 +1,8 @@
-package org.jflores.project;
+package org.jflores.project.helper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -125,5 +126,9 @@ public class ValidationHelper {
                 value = scanner.nextLine();
             }
         }
+    }
+    public static int getCurrentYear() {
+        LocalDate date = LocalDate.now();
+        return date.getYear();
     }
 }

@@ -1,4 +1,4 @@
-package org.jflores.project;
+package org.jflores.project.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
