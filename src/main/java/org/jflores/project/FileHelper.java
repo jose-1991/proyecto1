@@ -6,7 +6,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.jflores.project.exceptions.DifferentExtensionException;
 import org.jflores.project.exceptions.EmptyFileException;
-import org.jflores.project.exceptions.ReportPdfNotFound;
+import org.jflores.project.exceptions.ReportPdfNotFoundException;
 import org.jflores.project.models.Address;
 import org.jflores.project.models.Customer;
 import org.jflores.project.models.Order;
@@ -18,8 +18,10 @@ import java.util.List;
 
 public class FileHelper {
     public static final String FILE_NAME = "C:\\Users\\JoSe\\Desktop\\Proyecto1\\StoreData.csv";
+    public static final String LOCATION_REPORT = "C:\\Users\\JoSe\\Desktop\\CursoJava\\IdeaProjects\\proyectoN1\\src\\main\\java\\org\\jflores\\project\\reports\\";
     public static final String SEPARATOR = ";";
     public static final String EXTENSION_CSV = ".csv";
+    public static final String EXTENSION_PDF = ".pdf";
     static int nRow = 1;
     static List<Customer> customerList = new ArrayList<>();
     static List<Product> productList = new ArrayList<>();
@@ -111,7 +113,7 @@ public class FileHelper {
     public static void createPdfReport(String name, String content) {
         Document document = new Document();
         try {
-            String location = "C:\\Users\\JoSe\\Desktop\\CursoJava\\IdeaProjects\\proyectoN1\\src\\main\\java\\org\\jflores\\project\\reports\\" + name + ".pdf";
+            String location = LOCATION_REPORT + name + EXTENSION_PDF;
             PdfWriter.getInstance(document, new FileOutputStream(location));
 
             document.open();
@@ -121,7 +123,8 @@ public class FileHelper {
 
 
         } catch (FileNotFoundException e) {
-            throw new ReportPdfNotFound("Error when updating report, the pdf report is in use");
+            e.printStackTrace();
+            throw new ReportPdfNotFoundException("Error when updating report, the pdf report is in use");
         } catch (DocumentException e) {
             System.out.println("There was an error trying to create a PDF report");
             e.printStackTrace();

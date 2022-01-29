@@ -11,11 +11,10 @@ import static org.jflores.project.FileHelper.createPdfReport;
 import static org.jflores.project.ValidationHelper.*;
 
 public class ReportService {
-    ReportsDAO reportsDAO = new ReportsDAO();
-    static String date;
-    static int year;
-    static String productName;
-    static String state;
+    private ReportsDAO reportsDAO = new ReportsDAO();
+    private static String date;
+    private static int year;
+    private static String productName;
 
     public void generateDailyReport() {
         System.out.println("===== Enter the date for the report   (dd/mm/yyyy) =====");
@@ -23,7 +22,7 @@ public class ReportService {
         List<Double> totalSales = findDailyTotalSales();
 
         double dailyTotal = computeTotal(totalSales);
-        String name = "Daily Report (" + date + ")";
+        String name = "Daily Report (" + date.replace('/','_') + ")";
         String content = "============== Date: " + date + " ==============\n" +
                 "Total Sales = " + dailyTotal;
         createPdfReport(name, content);
