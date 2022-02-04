@@ -9,9 +9,6 @@ import java.sql.*;
 
 public class OrderDAO {
     public OrderDAO() {
-        if (isEmpty()) {
-            saveListsToDbTables();
-        }
     }
 
     private Connection getConnection() throws SQLException {

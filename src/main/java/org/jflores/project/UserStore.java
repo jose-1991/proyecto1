@@ -1,9 +1,11 @@
 package org.jflores.project;
 
+import org.jflores.project.models.Order;
 import org.jflores.project.service.OrderService;
 import org.jflores.project.service.ReportService;
 
 import static org.jflores.project.helper.ValidationHelper.*;
+
 
 public class UserStore {
 
@@ -24,13 +26,17 @@ public class UserStore {
         int option = validateIsPositiveInteger(scanner.nextLine(), MIN_VALUE_INTEGER, MAX_OPTIONS);
         switch (option) {
             case 1:
-                orderService.addNewOrder();
+                Order newOrder = populateNewOder();
+                Order orderCreated = orderService.addNewOrder(newOrder);
+                System.out.println("orderCreated: \n" + orderCreated);
                 break;
             case 2:
-                orderService.modifyOrder();
+                Order modifiedOrder = orderService.modifyOrder("ABC-2323-2333", 10, 0.5);
+                System.out.println("modifiedOrder: \n" + modifiedOrder);
                 break;
             case 3:
-                orderService.deleteOrder();
+                Order deletedOrder = orderService.deleteOrder("ABC-2323-2333");
+                System.out.println("deletedOrder: \n" + deletedOrder);
                 break;
             case 4:
                 reportService.generateDailyReport();
@@ -45,5 +51,16 @@ public class UserStore {
                 reportService.generateTopCustomerReportPerState();
                 break;
         }
+    }
+
+    private static Order populateNewOder() {
+        Order order = new Order();
+        order.setCustomerName("Paul Rodd");
+        order.setProductName("staples");
+        order.setQuantity(5);
+        order.setPrice(20.5);
+        order.setDiscount(0.1);
+        order.setAddressId(2204);
+        return order;
     }
 }

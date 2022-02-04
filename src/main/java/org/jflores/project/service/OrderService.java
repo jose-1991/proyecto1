@@ -3,11 +3,8 @@ package org.jflores.project.service;
 import org.jflores.project.dao.OrderDAO;
 import org.jflores.project.exceptions.IdValueNotFoundException;
 import org.jflores.project.models.Order;
-import org.jflores.project.models.Tables;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 import static org.jflores.project.helper.ValidationHelper.*;
 import static org.jflores.project.models.Tables.*;
@@ -18,93 +15,86 @@ public class OrderService {
     public static final String DASH = "-";
     public static final int MAX_QUANTITY_PRODUCT = 100;
 
-
-    private Scanner scanner = new Scanner(System.in);
     private OrderDAO orderDAO = new OrderDAO();
 
-    public void addNewOrder() {
+    public Order addNewOrder(Order order) {
 
-        Order order = new Order();
+        validatePartialOrder(order);
+
+        double total = computeTotal(order.getPrice(), order.getQuantity(), order.getDiscount());
+        order.setTotal(total);
+        order.setProfit(computeProfit(total));
         order.setOrderId(generateOrderId());
         order.setOrderDate(getCurrentDate());
 
-        System.out.println("===== Enter the customer's first and last name =====");
-        String customerName = validateOnlyLetters(scanner.nextLine());
-        order.setCustomerId(findIdValue(customerName, CUSTOMER));
-
-        System.out.println("===== Enter product name =====");
-        String productName = validateIsNotEmpty(scanner.nextLine());
-        order.setProductId(findIdValue(productName, PRODUCT));
-
-        System.out.println("===== Enter product quantity =====");
-
-        int quantity = validateIsPositiveInteger(scanner.nextLine(), 0, MAX_QUANTITY_PRODUCT);
-        order.setQuantity(quantity);
-
-        System.out.println("===== Enter product price (use '.' for decimal) =====");
-        double price = validatePositiveDecimal(scanner.nextLine());
-        order.setPrice(price);
-
-        System.out.println("===== Enter product discount (use '.' for 2 decimal) (range 0.0 to 0.9)  =====");
-        double discount = validatePercentage(scanner.nextLine());
-        order.setDiscount(discount);
-
-        System.out.println("===== Enter Postal code   (up to 5 digits)  =====");
-        int postalCode = findAddressId(scanner.nextLine());
-        order.setAddressId(postalCode);
-
-        double total = computeTotal(price, quantity, discount);
-        order.setTotal(total);
-        order.setProfit(computeProfit(total));
-        System.out.println("Total receivable: " + total);
-        System.out.println(order);
+        validateAddressId(order.getAddressId());
+        String customerId = orderDAO.findIdValue(order.getCustomerName(), CUSTOMER);
+        String productId = orderDAO.findIdValue(order.getProductName(), PRODUCT);
+        order.setCustomerId(customerId);
+        order.setProductId(productId);
 
         orderDAO.addNewOrderToDb(order);
+        return order;
     }
 
-    private int findAddressId(String value) {
-        int addressId;
-        while (true) {
-            addressId = validateIsPositiveInteger(value, MIN_VALUE_INTEGER, MAX_VALUE_POSTAL_CODE);
-            if (orderDAO.addressIdExists(addressId)) {
-                return addressId;
-            } else {
-                System.out.println("An error has occurred!\nPostal code: '" + addressId + "' not found in address table\n" +
-                        TRY_AGAIN_MESSAGE);
-                value = scanner.nextLine();
-            }
+    public void validatePartialOrder(Order order) {
+        validateString("CustomerName", order.getCustomerName());
+        validateString("ProductName", order.getProductName());
+
+        validateNumber("Quantity", order.getQuantity());
+        validateNumber("Price", order.getPrice());
+        validateNumber("AddressId", order.getAddressId());
+        validateRange(order.getDiscount());
+    }
+
+    public void validateRange(double discount) {
+        if (discount < 0 || discount > 1) {
+            throw new RuntimeException("Discount has to be between 0 and 1");
         }
     }
 
-    private String generateOrderId() {
-        int sixDigitNumber = (int) (Math.random() * 100000) + 100000;
+    public void validateNumber(String nameValue, double value) {
+        if (value <= 0) {
+            throw new RuntimeException(nameValue + " can not be 0 or less");
+        }
+    }
 
+    public String validateDateFormat(String value) {
+        validateString("orderDate", value);
+        if (!value.matches(DATE_FORMAT)) {
+            throw new RuntimeException("orderDate does not have the correct Format (dd/mm/yyyy)");
+        }
+        return value;
+    }
+
+    public String validateString(String nameValue, String value) {
+        if (value == null) {
+            throw new RuntimeException(nameValue + " can not be null");
+        }
+        if (value.isEmpty()) {
+            throw new RuntimeException(nameValue + " can not be empty");
+        }
+        return value;
+    }
+
+    public int validateAddressId(int value) {
+        if (!orderDAO.addressIdExists(value)) {
+            throw new IdValueNotFoundException("Id not found");
+        }
+        return value;
+    }
+
+    public String generateOrderId() {
+        int sixDigitNumber = (int) (Math.random() * 100000) + 100000;
         return COUNTRY_US + DASH + getCurrentYear() + DASH + sixDigitNumber;
     }
 
-    private String getCurrentDate() {
+    public String getCurrentDate() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d/M/yyyy");
         return simpleDateFormat.format(new Date());
     }
 
-    private String findIdValue(String value, Tables table) {
-        while (true) {
-            try {
-                if (table.equals(CUSTOMER)) {
-                    value = validateOnlyLetters(value);
-                } else {
-                    value = validateIsNotEmpty(value);
-                }
-                return orderDAO.findIdValue(value, table);
-
-            } catch (IdValueNotFoundException e) {
-                System.out.println(TRY_AGAIN_MESSAGE);
-                value = scanner.nextLine();
-            }
-        }
-    }
-
-    private double computeTotal(double price, int quantity, double discount) {
+    public double computeTotal(double price, int quantity, double discount) {
         double total = price * quantity;
         if (discount > 0.0) {
             total *= (1 - discount);
@@ -112,40 +102,31 @@ public class OrderService {
         return Math.round(total * 100.0) / 100.0;
     }
 
-    private double computeProfit(double total) {
+    public double computeProfit(double total) {
         double profit = total * 0.8;
         return Math.round(profit * 100.0) / 100.0;
     }
 
-    public void modifyOrder() {
-        System.out.println("===== Enter the order id of the order you want to modify =====");
-        String orderId = findIdValue(scanner.nextLine(), Tables.ORDER);
+    public Order modifyOrder(String orderId, int newQuantity, double newDiscount) {
         Order order = orderDAO.getOrderRecord(orderId);
-        System.out.println(order);
+        System.out.println("Current Order" + order);
 
-        System.out.println("===== Enter the new quantity for this order =====");
-        int quantity = validateIsPositiveInteger(scanner.nextLine(), MIN_VALUE_INTEGER, MAX_QUANTITY_PRODUCT);
-        order.setQuantity(quantity);
-
-        System.out.println("===== Enter the new discount for this order =====");
-        double discount = validatePercentage(scanner.nextLine());
-        order.setDiscount(discount);
+        order.setQuantity(newQuantity);
+        order.setDiscount(newDiscount);
 
         double total = computeTotal(order.getPrice(), order.getQuantity(), order.getDiscount());
         order.setTotal(total);
         double profit = computeProfit(total);
         order.setProfit(profit);
-        System.out.println(order);
 
         orderDAO.modifyTableData(order);
+        return order;
     }
 
-    public void deleteOrder() {
-        System.out.println("===== Enter the order id of the order you want to delete =====");
-        String orderId = findIdValue(scanner.nextLine(), Tables.ORDER);
-        System.out.println(orderDAO.getOrderRecord(orderId));
-
+    public Order deleteOrder(String orderId) {
+        Order order = orderDAO.getOrderRecord(orderId);
         orderDAO.deleteOrderOfDb(orderId);
+        return order;
     }
 }
 
