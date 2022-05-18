@@ -22,7 +22,7 @@ public class OrderService {
     private Scanner scanner = new Scanner(System.in);
     private OrderDAO orderDAO = new OrderDAO();
 
-    public void addNewOrder() {
+    public Order addNewOrder() {
 
         Order order = new Order();
         order.setOrderId(generateOrderId());
@@ -57,9 +57,10 @@ public class OrderService {
         order.setTotal(total);
         order.setProfit(computeProfit(total));
         System.out.println("Total receivable: " + total);
-        System.out.println(order);
 
         orderDAO.addNewOrderToDb(order);
+
+        return order;
     }
 
     private int findAddressId(String value) {

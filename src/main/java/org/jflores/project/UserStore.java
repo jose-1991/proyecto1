@@ -1,5 +1,6 @@
 package org.jflores.project;
 
+import org.jflores.project.models.Order;
 import org.jflores.project.service.OrderService;
 import org.jflores.project.service.ReportService;
 
@@ -24,7 +25,8 @@ public class UserStore {
         int option = validateIsPositiveInteger(scanner.nextLine(), MIN_VALUE_INTEGER, MAX_OPTIONS);
         switch (option) {
             case 1:
-                orderService.addNewOrder();
+                Order order = orderService.addNewOrder();
+                System.out.println(order);
                 break;
             case 2:
                 orderService.modifyOrder();
