@@ -26,7 +26,7 @@ public class UserStore {
         int option = validateIsPositiveInteger(scanner.nextLine(), MIN_VALUE_INTEGER, MAX_OPTIONS);
         switch (option) {
             case 1:
-                Order newOrder = populateNewOder();
+                Order newOrder = populateNewOrder();
                 Order orderCreated = orderService.addNewOrder(newOrder);
                 System.out.println("orderCreated: \n" + orderCreated);
                 break;
@@ -53,14 +53,15 @@ public class UserStore {
         }
     }
 
-    private static Order populateNewOder() {
+    public static Order populateNewOrder() {
         Order order = new Order();
-        order.setCustomerName("Paul Rodd");
+        order.setOrderId(new OrderService().generateOrderId());
+        order.setCustomerName("Paul Prost");
         order.setProductName("staples");
         order.setQuantity(5);
         order.setPrice(20.5);
         order.setDiscount(0.1);
-        order.setAddressId(2204);
+        order.setAddressId(30080);
         return order;
     }
 }

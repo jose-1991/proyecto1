@@ -3,24 +3,8 @@ package org.jflores.project.models;
 import java.util.Objects;
 
 public class Order {
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
 
     private String customerName;
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     private String productName;
     private String orderId;
     private String customerId;
@@ -32,6 +16,22 @@ public class Order {
     private double discount;
     private double total;
     private double profit;
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public String getOrderId() {
         return orderId;

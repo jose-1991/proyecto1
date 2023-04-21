@@ -58,6 +58,11 @@ public class OrderService {
             throw new RuntimeException(nameValue + " can not be 0 or less");
         }
     }
+    public void validateNumber(String nameValue, int value) {
+        if (value <= 0) {
+            throw new NumberFormatException(nameValue + " can not be 0 or less");
+        }
+    }
 
     public String validateDateFormat(String value) {
         validateString("orderDate", value);
